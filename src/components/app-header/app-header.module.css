@@ -11,11 +11,11 @@
   width: 1280px;
   height: 56px;
   display: flex;
-  flex-direction: row;
+  align-items: center;
   gap: 8px;
 }
 
 .logo {
-  margin: auto auto auto 94px;
-  height: 40px;
+  margin: auto auto auto 104px;
+  height: 50px;
 }

@@ -1,7 +1,8 @@
 import Style from './burger-ingredients.module.css';
 import TabMenu from '../tabs/tabs';
 import IdgridientItems from '../ingridient-items/ingridient-items';
-
+import PropTypes from 'prop-types';
+import PropTypesIngridients from '../utils/prop-types-ingridients';
 
 export default function BurgerIngredients(props) {
   const bunsArr = props.ingrData.filter((bun) => bun.type === "bun");
@@ -30,5 +31,9 @@ export default function BurgerIngredients(props) {
       </ul>
     </section>
   )
+}
+
+BurgerIngredients.propTypes = {
+  props: PropTypes.arrayOf(PropTypesIngridients)
 }
 

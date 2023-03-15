@@ -22,23 +22,11 @@
   list-style: none;
 }
 
-.list2 {
-  max-height: 100%;
-  padding: 0px;
-  margin: 0px;
-  list-style: none;
-  display: flex;
-  align-items: flex-start;
-  overflow: auto;
-  scrollbar-color: rgba(133, 133, 173, 1);
-  scrollbar-width: thin;
-}
-
 .listitem {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+
 }
 
 .listitemlist {
