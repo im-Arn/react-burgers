@@ -1,0 +1,21 @@
+.header {
+  width: 100%;
+  height: 88px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1C1C21;
+}
+
+.menu {
+  width: 1280px;
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.logo {
+  margin: auto auto auto 94px;
+  height: 40px;
+}
