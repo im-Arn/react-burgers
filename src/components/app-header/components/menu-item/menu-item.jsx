@@ -1,9 +1,12 @@
 import Style from './menu-item.module.css';
+import PropTypes from 'prop-types';
 
-function MenuItem(props) {
+export default function MenuItem(props) {
   return (
-    <a href="#" className={`${Style.menuitem} p-5`}>{props.children}</a>
+    <a href="#" className={`${Style.menuitem} p-5`}>{props.children}</a> // eslint-disable-line
   )
 }
 
-export default MenuItem;
+MenuItem.propTypes = {
+  children: PropTypes.node.isRequired,
+};

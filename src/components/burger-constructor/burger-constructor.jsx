@@ -7,13 +7,11 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details'
 
 export default function BurgerConstructor(props) {
-  const img = 'https://code.s3.yandex.net/react/code/bun-02.png';
-
   const [modal, setModal] = React.useState(false);
   const openModal = () => setModal(true);
   const closeModal = () => setModal(false);
 
-  const { bun, ingredients } = {// eslint-disable-line
+  const { bun, ingredients } = {
     bun: props.ingredientData.find((bun) => bun.type === "bun"),
     ingredients: props.ingredientData.filter((ingredient) => ingredient.type !== 'bun'),
   };
@@ -25,12 +23,9 @@ export default function BurgerConstructor(props) {
           <ConstructorElement
             type="top"
             isLocked={true}
-            //здесь находится мок т.к. по какой-то причине константа bun не создаётся в момент рендера и страница падает.
-            //но при выключении/включении компонента всё начинает работать как нужно. 
-            // возможно у меня локальная проблема, а у вас будет работать. версия кода без мока находится в нижней булочке.
-            text="Краторная булка N-200i (верх)" 
-            price="200"
-            thumbnail={img}
+            text={`${bun.name} (верх)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </li>
         <li className={Style.listitemlist}>
@@ -54,9 +49,9 @@ export default function BurgerConstructor(props) {
           <ConstructorElement
             type="bottom"
             isLocked={true}
-          // text={`${bun.name} (низ)`}
-          // price={bun.price}
-          // thumbnail={bun.image}
+            text={`${bun.name} (низ)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </li>
       </ul>
@@ -77,5 +72,5 @@ export default function BurgerConstructor(props) {
 }
 
 BurgerConstructor.propTypes = {
-  ingredientData: PropTypes.arrayOf(PropTypesIngredients).isRequired
+  ingredientData: PropTypes.arrayOf(PropTypesIngredients.isRequired).isRequired
 }

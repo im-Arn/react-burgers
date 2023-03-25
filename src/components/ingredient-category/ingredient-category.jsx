@@ -19,5 +19,5 @@ export default function IdgredientCategory(props) {
 }
 
 IdgredientCategory.propTypes = {
-  data: PropTypes.arrayOf(PropTypesIngredients).isRequired
+  data: PropTypes.arrayOf(PropTypesIngredients.isRequired).isRequired
 }

@@ -23,7 +23,8 @@ export default function Modal({children, closeModal}) {
     return () => {
       document.removeEventListener('keydown', closePopupOnEsc);
     }
-  }, [closeModal])
+  }, []) // eslint-disable-line
+// TODO: пустой массив необходим для единоразового срабатывания useEffect
 
   return createPortal(
     <ModalOverlay closeModal={closeModal}>

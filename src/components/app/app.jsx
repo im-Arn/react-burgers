@@ -1,26 +1,21 @@
 import AppHeader from "../app-header/app-header";
 import MainPage from "../../pages/main-page/main-page";
 import React from "react";
+import Api from "../utils/Api"
+import { serverUrl } from "../utils/serverUrl"
 
 function App() {
-  const api = 'https://norma.nomoreparties.space/api/ingredients';
+  const api = new Api(serverUrl);
 
   const [state, setState] = React.useState([]);
 
   React.useEffect(() => {
-    const getData = async () => {
-      return await fetch(api)
-        .then((res) => {
-          if (res.ok) {
-            return res.json()
-          }
-          return Promise.reject(`Ошибка ${res.status}`);
-        })
-        .then((data) => setState(data.data))
-        .catch((err) => console.log(err));
-    }
-    getData();
-  }, [])
+    api.getIngredients()
+      .then((res) => {
+        setState(res.data);
+      });
+  }, []) // eslint-disable-line
+// TODO: пустой массив необходим для единоразового срабатывания useEffect
 
   return (
     <>
