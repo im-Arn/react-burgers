@@ -13,7 +13,7 @@ export default function BurgerIngredients(props) {
     <section className={`${Style.section} pt5 mb-10`}>
       <h1 className="text text_type_main-large pt-10 pb-5">Соберите бургер</h1>
       <TabMenu />
-      <ul className={`${Style.listingridients} mt-10`}>
+      <ul className={`${Style.listingridients}`}>
         <IdgredientCategory data={bunsArr} header='Булки' id="bun" />
         <IdgredientCategory data={sauceArr} header='Соусы' id="sauce" />
         <IdgredientCategory data={mainArr} header='Начинки' id="main" />

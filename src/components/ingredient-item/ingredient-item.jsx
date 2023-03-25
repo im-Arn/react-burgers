@@ -18,7 +18,7 @@ export default function IngredientItem(props) {
         <p className={`${Style.text} text text_type_digits-default`}>{props.data.price}</p>
         <CurrencyIcon type="primary" />
       </div>
-      <p className={`${Style.text} text text_type_main-small`}>{props.data.name}</p>
+      <p className={`${Style.text} text text_type_main-default`}>{props.data.name}</p>
       {modal && (
         <Modal closeModal={closeModal}>
           <IngredientDetails ingredient={props.data} />
