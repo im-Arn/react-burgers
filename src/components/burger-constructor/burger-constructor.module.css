@@ -18,8 +18,25 @@
 
 .list {
   max-height: calc(100vh - 368px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin: 0px;
   list-style: none;
+}
+
+.list2 {
+  max-height: 100%;
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style: none;
+  align-items: flex-start;
+  overflow: auto;
+  scrollbar-color: rgba(133, 133, 173, 1);
+  scrollbar-width: thin;
 }
 
 .listitem {
@@ -27,6 +44,13 @@
   align-items: center;
   justify-content: flex-end;
 
+}
+
+.listitem2 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .listitemlist {

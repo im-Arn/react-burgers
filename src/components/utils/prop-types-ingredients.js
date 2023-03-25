@@ -1,7 +1,7 @@
 
 import PropTypes from "prop-types";
 
-const PropTypesIngridients = PropTypes.shape({
+const PropTypesIngredients = PropTypes.shape({
      calories: PropTypes.number.isRequired,
      carbohydrates: PropTypes.number.isRequired,
      fat: PropTypes.number.isRequired,
@@ -15,4 +15,4 @@ const PropTypesIngridients = PropTypes.shape({
      type: PropTypes.oneOf(["bun", "main", "sauce"]).isRequired,
 });
 
-export default PropTypesIngridients
+export default PropTypesIngredients

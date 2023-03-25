@@ -5,6 +5,10 @@
   flex-direction: column;
 }
 
+* {
+  scroll-behavior: smooth;
+}
+
 .listingridients {
   max-height: 100%;
   overflow: auto;
