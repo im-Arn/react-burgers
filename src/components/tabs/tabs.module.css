@@ -1,0 +1,8 @@
+.tabs {
+  display: flex;
+  flex-direction: row;
+}
+
+.anchor {
+  text-decoration: none;
+}

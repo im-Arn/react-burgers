@@ -1,0 +1,20 @@
+.section {
+  width: 600px;
+  max-height: 912px;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+.listingridients {
+  max-height: 100%;
+  overflow: auto;
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  scrollbar-color:rgba(133, 133, 173, 1);
+  scrollbar-width: thin;
+}
