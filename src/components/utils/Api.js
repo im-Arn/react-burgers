@@ -20,4 +20,17 @@ export default class Api {
     return fetch(`${this._server}ingredients`)
       .then((res) => this._getResponse(res))
   };
+
+  getOrderNumber(data) {
+    return fetch(`${this._server}orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "ingredients": data,
+      })
+    })
+      .then((res) => this._getResponse(res))
+  };
 }

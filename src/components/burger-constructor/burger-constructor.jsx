@@ -1,20 +1,59 @@
 import Style from './burger-constructor.module.css';
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useEffect, useState } from 'react';
 import { CurrencyIcon, Button, ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypesIngredients from '../utils/prop-types-ingredients';
+// import PropTypes from 'prop-types';
+// import PropTypesIngredients from '../utils/prop-types-ingredients';
 import Modal from '../modal/modal';
-import OrderDetails from '../order-details/order-details'
+import OrderDetails from '../order-details/order-details';
+import { TotalDataContext, ApiClassContext } from '../../services/AppContext';
 
-export default function BurgerConstructor(props) {
-  const [modal, setModal] = React.useState(false);
-  const openModal = () => setModal(true);
-  const closeModal = () => setModal(false);
+export default function BurgerConstructor() {
+
+  const { data } = useContext(TotalDataContext); //хук данных всех ингредиентов
+  const [totalPrice, setTotalPrice] = useState(0); //хук подсчёта финальной стоимости
+  const [order, setOrder] = useState();  //хук номера заказа
+  const { api } = useContext(ApiClassContext);
+
+  //работа с модальным окном и отправка id на сервер, получение номера заказа
+  const openModal = () => {
+    api
+      .getOrderNumber(totalIngredientsId)
+      .then((res) => setOrder(res.order.number));
+  }
+  const closeModal = () => {
+    setOrder();
+  }
+
+  // //работа с модальным окном
+  // const [modal, setModal] = React.useState(false);
+  // const openModal = () => {
+  //   api
+  //     .getOrderNumber(totalIngredientsId)
+  //     .then((res) => setOrder(res.order.number));
+  //   setModal(true);
+  // }
+  // const closeModal = () => {
+  //   setOrder('');
+  //   setModal(false);
+  // }
 
   const { bun, ingredients } = {
-    bun: props.ingredientData.find((bun) => bun.type === "bun"),
-    ingredients: props.ingredientData.filter((ingredient) => ingredient.type !== 'bun'),
+    bun: data.find((bun) => bun.type === "bun"),
+    ingredients: data.filter((ingredient) => ingredient.type !== 'bun'),
   };
+
+  const ingredientsId = [];
+  ingredients.forEach((ingredient) => {
+    ingredientsId.push(ingredient._id)
+  });
+  const totalIngredientsId = [bun._id, ...ingredientsId, bun._id];
+
+  useEffect(() => {
+    let total = 0;
+    ingredients.map((ingredient) => (total += ingredient.price));
+    setTotalPrice(total + bun.price * 2);
+  }, [ingredients, bun]
+  );
 
   return (
     <section className={`${Style.section}`}>
@@ -56,21 +95,21 @@ export default function BurgerConstructor(props) {
         </li>
       </ul>
       <div className={`${Style.pricearea} pr-4`}>
-        <p className='text text_type_digits-medium mr-9'>610 <CurrencyIcon type="primary" /></p>
+        <p className='text text_type_digits-medium mr-9'>{`${totalPrice}`}<CurrencyIcon type="primary" /></p>
         <Button htmlType="button" type="primary" size="large" onClick={openModal}>
           Оформить заказ
         </Button>
       </div>
 
-      {modal && (
+      {order && (
         <Modal closeModal={closeModal}>
-          <OrderDetails />
+          <OrderDetails number={order} />
         </Modal>
       )}
     </section >
   )
 }
 
-BurgerConstructor.propTypes = {
-  ingredientData: PropTypes.arrayOf(PropTypesIngredients.isRequired).isRequired
-}
+// BurgerConstructor.propTypes = {
+//   ingredientData: PropTypes.arrayOf(PropTypesIngredients.isRequired).isRequired
+// }
