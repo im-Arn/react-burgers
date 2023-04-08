@@ -6,6 +6,7 @@ import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details'
 
 export default function IngredientItem(props) {
+  //работа с модальным окном
   const [modal, setModal] = React.useState(false);
   const openModal = () => setModal(true);
   const closeModal = () => setModal(false);
