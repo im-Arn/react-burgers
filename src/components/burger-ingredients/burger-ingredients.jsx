@@ -1,13 +1,16 @@
 import Style from './burger-ingredients.module.css';
+import { useContext } from 'react';
 import TabMenu from '../tabs/tabs';
-import PropTypes from 'prop-types';
-import PropTypesIngredients from '../utils/prop-types-ingredients';
+// import PropTypes from 'prop-types';
+// import PropTypesIngredients from '../utils/prop-types-ingredients';
 import IdgredientCategory from '../ingredient-category/ingredient-category';
+import { TotalDataContext } from '../../services/AppContext';
 
-export default function BurgerIngredients(props) {
-  const bunsArr = props.ingredientData.filter((bun) => bun.type === "bun");
-  const sauceArr = props.ingredientData.filter((sauce) => sauce.type === "sauce");
-  const mainArr = props.ingredientData.filter((main) => main.type === "main");
+export default function BurgerIngredients() {
+  const { data } = useContext(TotalDataContext);
+  const bunsArr = data.filter((bun) => bun.type === "bun");
+  const sauceArr = data.filter((sauce) => sauce.type === "sauce");
+  const mainArr = data.filter((main) => main.type === "main");
 
   return (
     <section className={`${Style.section} pt5 mb-10`}>
@@ -22,7 +25,7 @@ export default function BurgerIngredients(props) {
   )
 }
 
-BurgerIngredients.propTypes = {
-  ingredientData: PropTypes.arrayOf(PropTypesIngredients.isRequired).isRequired
-}
+// BurgerIngredients.propTypes = {
+//   ingredientData: PropTypes.arrayOf(PropTypesIngredients.isRequired).isRequired
+// }
 
