@@ -1,4 +1,6 @@
-export default class Api {
+import { SERVER_URL } from "../utils/serverUrl";
+
+class Api {
   constructor(server) {
     this._server = server;
   }
@@ -14,13 +16,15 @@ export default class Api {
 
   // Взаимодействие с сервером -----------------------------------------------
   /**
-   * Публичный метод получения данных ингредиентов
+   * Публичный метод класса Api получения данных ингредиентов
    */
   getIngredients() {
     return fetch(`${this._server}ingredients`)
       .then((res) => this._getResponse(res))
   };
-
+  /**
+   * Публичный метод отправки массива айди и получения номера заказа с сервера
+   */
   getOrderNumber(data) {
     return fetch(`${this._server}orders`, {
       method: 'POST',
@@ -34,3 +38,5 @@ export default class Api {
       .then((res) => this._getResponse(res))
   };
 }
+
+export const api = new Api(SERVER_URL);

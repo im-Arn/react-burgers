@@ -1,23 +1,22 @@
-import { useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import Style from './tabs.module.css';
+import { forwardRef } from 'react';
 
-function TabMenu() {
-  const [current, setCurrent] = useState('bun')
+const TabMenu = forwardRef((props, ref) => {
   return (
-    <div className={Style.tabs}>
+    <div className={Style.tabs} ref={ref}>
       <a href="/#bun" className={Style.anchor}>
-        <Tab value="bun" active={current === 'bun'} onClick={setCurrent}>Булки</Tab>
+        <Tab value="bun" active={props.current === 'bun'} >Булки</Tab>
       </a>
       <a href="/#sauce" className={Style.anchor}>
-        <Tab value="sauce" active={current === 'sauce'} onClick={setCurrent}>Соусы</Tab>
+        <Tab value="sauce" active={props.current === 'sauce'} >Соусы</Tab>
       </a>
       <a href="/#main" className={Style.anchor}>
-        <Tab value="main" active={current === 'main'} onClick={setCurrent}>Начинки</Tab>
+        <Tab value="main" active={props.current === 'main'} >Начинки</Tab>
       </a>
     </div>
   )
-}
+})
 
 export default TabMenu;
 

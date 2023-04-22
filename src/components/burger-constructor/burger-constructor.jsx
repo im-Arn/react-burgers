@@ -1,98 +1,93 @@
 import Style from './burger-constructor.module.css';
-import React, { useContext, useEffect, useState } from 'react';
-import { CurrencyIcon, Button, ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-// import PropTypes from 'prop-types';
-// import PropTypesIngredients from '../utils/prop-types-ingredients';
+import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
+import { CurrencyIcon, Button, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { TotalDataContext, ApiClassContext } from '../../services/AppContext';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchOrder, resetOrderNumber } from '../../services/actions/order';
+import { DraggableElement } from '../draggable-element/draggable-element';
+import { useDrop } from "react-dnd";
 
-export default function BurgerConstructor() {
 
-  const { data } = useContext(TotalDataContext); //хук данных всех ингредиентов
+export default function BurgerConstructor({ onDropHandler }) {
+  const orderNumber = useSelector(state => state.order.number); //достали номер заказа из стора
+  const orderList = useSelector(state => state.constructorData); //достали список ингредиентов лежащих в заказе из стора
+
+  const dispatch = useDispatch();
   const [totalPrice, setTotalPrice] = useState(0); //хук подсчёта финальной стоимости
-  const [order, setOrder] = useState();  //хук номера заказа
-  const { api } = useContext(ApiClassContext);
+  const [totalIngredientsId, setTotalIngredientsId] = useState(null); //хук сборки id для отправки на сервер
 
-  //работа с модальным окном и отправка id на сервер, получение номера заказа
+  //работа с модальным окном и отправка [id] на сервер, получение номера заказа-----------------------
   const openModal = () => {
-    api
-      .getOrderNumber(totalIngredientsId)
-      .then((res) => setOrder(res.order.number));
+    dispatch(fetchOrder(totalIngredientsId));
   }
   const closeModal = () => {
-    setOrder();
+    dispatch(resetOrderNumber(null));
   }
 
-  // //работа с модальным окном
-  // const [modal, setModal] = React.useState(false);
-  // const openModal = () => {
-  //   api
-  //     .getOrderNumber(totalIngredientsId)
-  //     .then((res) => setOrder(res.order.number));
-  //   setModal(true);
-  // }
-  // const closeModal = () => {
-  //   setOrder('');
-  //   setModal(false);
-  // }
-
-  const { bun, ingredients } = {
-    bun: data.find((bun) => bun.type === "bun"),
-    ingredients: data.filter((ingredient) => ingredient.type !== 'bun'),
-  };
-
-  const ingredientsId = [];
-  ingredients.forEach((ingredient) => {
-    ingredientsId.push(ingredient._id)
+  //dnd функционал -----------------------------------------------------------------------------------
+  const [{ isHover }, dropTargetRef] = useDrop({
+    accept: "ingredient", //аналогично type у useDrag. 
+    drop(itemId) {
+      onDropHandler(itemId);
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver(),
+    })
   });
-  const totalIngredientsId = [bun._id, ...ingredientsId, bun._id];
 
   useEffect(() => {
-    let total = 0;
-    ingredients.map((ingredient) => (total += ingredient.price));
-    setTotalPrice(total + bun.price * 2);
-  }, [ingredients, bun]
-  );
+    // считаем сумму, пишем в стейт
+    const sum = orderList.toppings.reduce(
+      (current, total) => current + total.price,
+      orderList.bun === null || orderList.bun.price === undefined ? 0 : orderList.bun.price * 2
+    );
+    setTotalPrice(sum);
+
+    // если ингредиентов достаточно, считаем айдишники, пишем в стейт
+    if (orderList.bun && orderList.toppings.length > 0) {
+      const ingredientsId = [];
+      orderList.toppings.forEach((ingredient) => {
+        ingredientsId.push(ingredient._id)
+      });
+      const totalIngredientsId = [orderList.bun._id, ...ingredientsId, orderList.bun._id];
+      setTotalIngredientsId(totalIngredientsId);
+    }
+  }, [orderList]);
 
   return (
     <section className={`${Style.section}`}>
-      <ul className={`${Style.list} pt-25 pl-4`}>
-        <li className={`${Style.listitem} pr-4`}>
+      <ul className={`${Style.list}`} ref={dropTargetRef} style={isHover ? { boxShadow: "inset 0px 0px 35px 21px rgba(195,31,255,0.45)" } : { boxShadow: "none" }}>
+      {/*индикатор возможности отправки заказа, отключается только при наличии булочки и одного ингредиента */}
+        {!(orderList.bun && orderList.toppings.length > 0) && (<p style={{ margin: "auto" }} className={`text text_type_main-medium`}>Несите яства!</p>)}
+        {orderList.bun ? (<li className={`${Style.listitem} pr-4`} key={1}>
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={`${bun.name} (верх)`}
-            price={bun.price}
-            thumbnail={bun.image}
+            text={`${orderList.bun.name} (верх)`}
+            price={orderList.bun.price}
+            thumbnail={orderList.bun.image}
           />
-        </li>
-        <li className={Style.listitemlist}>
+        </li>) : null}
+        <li className={Style.listitemlist} key={2}>
           <ul className={Style.list2}>
-            {ingredients.map(function (ingredient) {
+            {orderList.toppings && (orderList.toppings.map(function (ingredient, index) {
               return (
-                <li className={Style.listitem2} key={ingredient._id}>
-                  <DragIcon type="primary" />
-                  <ConstructorElement
-                    text={`${ingredient.name}`}
-                    price={ingredient.price}
-                    thumbnail={ingredient.image}
-                  />
-                </li>
+                <DraggableElement ingredient={ingredient} index={index} key={ingredient.uid}/>
               )
-            })}
+            }))}
           </ul>
         </li>
-
-        <li className={`${Style.listitem} pr-4`}>
+        {orderList.bun ? (<li className={`${Style.listitem} pr-4`} key={3}>
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={`${bun.name} (низ)`}
-            price={bun.price}
-            thumbnail={bun.image}
+            text={`${orderList.bun.name} (низ)`}
+            price={orderList.bun.price}
+            thumbnail={orderList.bun.image}
           />
-        </li>
+        </li>) : null}
       </ul>
       <div className={`${Style.pricearea} pr-4`}>
         <p className='text text_type_digits-medium mr-9'>{`${totalPrice}`}<CurrencyIcon type="primary" /></p>
@@ -101,15 +96,15 @@ export default function BurgerConstructor() {
         </Button>
       </div>
 
-      {order && (
+      {orderNumber && (
         <Modal closeModal={closeModal}>
-          <OrderDetails number={order} />
+          <OrderDetails />
         </Modal>
       )}
     </section >
   )
 }
 
-// BurgerConstructor.propTypes = {
-//   ingredientData: PropTypes.arrayOf(PropTypesIngredients.isRequired).isRequired
-// }
+BurgerConstructor.propTypes = {
+  onDropHandler: PropTypes.func.isRequired
+}

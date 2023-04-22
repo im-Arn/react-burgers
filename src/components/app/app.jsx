@@ -1,31 +1,24 @@
 import AppHeader from "../app-header/app-header";
 import MainPage from "../../pages/main-page/main-page";
-import React, { useState } from "react";
-import Api from "../utils/Api";
-import { SERVER_URL } from "../utils/serverUrl";
-import { TotalDataContext, ApiClassContext } from '../../services/AppContext';
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchIngredients } from "../../services/actions/ingredients";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
-  const api = new Api(SERVER_URL);
+  const dispatch = useDispatch();
 
-  const [data, setData] = useState([]); //данные запрошенные с сервера
-
-  React.useEffect(() => {
-    api.getIngredients()
-      .then((res) => {
-        setData(res.data);
-      });
-  }, []) // eslint-disable-line
-  // TODO: пустой массив необходим для единоразового срабатывания useEffect
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, []);
 
   return (
     <>
       <AppHeader />
-      <TotalDataContext.Provider value={{ data, setData }}>
-        <ApiClassContext.Provider value={{ api }}>
-          <MainPage />
-        </ApiClassContext.Provider>
-      </TotalDataContext.Provider>
+      <DndProvider backend={HTML5Backend}>
+        <MainPage />
+      </DndProvider>
     </>
   )
 }

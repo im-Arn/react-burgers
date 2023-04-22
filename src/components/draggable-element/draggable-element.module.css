@@ -1,0 +1,8 @@
+.listitem2 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 569px;
+  gap: 8px;
+  transition: all 0.5s;
+}
