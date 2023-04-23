@@ -2,14 +2,17 @@ import Style from './burger-ingredients.module.css';
 import TabMenu from '../tabs/tabs';
 import { useSelector } from "react-redux";
 import IngredientCategory from '../ingredient-category/ingredient-category';
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 
 export default function BurgerIngredients() {
   //достали ингредиенты из стора и раскидали по разделам
   const data = useSelector(state => state.ingredients.ingredients);
-  const bunsArr = data.filter((bun) => bun.type === "bun");
-  const sauceArr = data.filter((sauce) => sauce.type === "sauce");
-  const mainArr = data.filter((main) => main.type === "main");
+  const bunsArr = useMemo(
+    () => { return data.filter((bun) => bun.type === "bun"); }, [data]);
+  const sauceArr = useMemo(
+    () => { return data.filter((sauce) => sauce.type === "sauce"); }, [data]);
+  const mainArr = useMemo(
+    () => { return data.filter((main) => main.type === "main"); }, [data]);
 
   //константы для последующего вычисления активной вкладки посредством анализа расположения разделов 
   const [current, setCurrent] = useState('bun');
