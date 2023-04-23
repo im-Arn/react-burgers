@@ -43,11 +43,9 @@ export function fetchOrder(dataArray) {
 /**
  * action очистки номера заказа
  */
-export function resetOrderNumber(dataNumber) {
-  return function (dispatch) {
-    dispatch({
-      type: RESET_ORDER_NUMBER,
-      number: dataNumber
-    })
+export function resetOrderNumber(dataNumber) { //надеюсь вы писали об этом
+  return {
+    type: RESET_ORDER_NUMBER,
+    number: dataNumber
   }
 }
