@@ -1,7 +1,7 @@
 import { deleteConstructorIngredient, moveConstructorIngredient } from '../../services/actions/constructor';
 import Style from './draggable-element.module.css';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { useDrop, useDrag } from "react-dnd";
 import { useCallback } from 'react';
 
@@ -18,8 +18,8 @@ export function DraggableElement(props) {
   const [{ isDrag }, drag] = useDrag({
     type: 'ingredientList',
     item: () => {
-          return { index }
-        },
+      return { index }
+    },
     collect: (monitor) => ({
       isDrag: monitor.isDragging(),
     }),
@@ -38,16 +38,19 @@ export function DraggableElement(props) {
     },
   });
 
+  const deleteIngredient = (uid) => {
+    dispatch(deleteConstructorIngredient(uid));
+  }
 
   return (
     <>
-      <li ref={node => drag(drop(node))} className={Style.listitem2} style={isDrag ? { background: "linear-gradient(transparent, rgba(55, 27, 158, 0.75), transparent)" } : { background: "none" }} key={uid}>
+      <li ref={node => drag(drop(node))} className={Style.listitem2} style={{ background: isDrag ? "linear-gradient(transparent, rgba(55, 27, 158, 0.75), transparent)" : "none" }} key={uid}>
         <DragIcon type="primary" />
         <ConstructorElement
           text={`${name}`}
           price={price}
           thumbnail={image}
-          handleClose={(() => { dispatch(deleteConstructorIngredient(uid)) })}
+          handleClose={(() => { deleteIngredient(uid) })}
         />
       </li>
     </>
