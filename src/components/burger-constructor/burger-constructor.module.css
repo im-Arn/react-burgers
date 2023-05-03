@@ -17,12 +17,19 @@
 }
 
 .list {
+  min-height: 200px;
   max-height: calc(100vh - 368px);
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin: 0px;
+  margin-top: 70px;
+  padding-top: 15px;
+  margin-left: 16px;
+  padding-left: 0px;
+  margin-bottom: 0px;
+  padding-bottom: 15px;
   list-style: none;
+  transition: all 0.6s;
 }
 
 .list2 {
@@ -44,14 +51,6 @@
   align-items: center;
   justify-content: flex-end;
 
-}
-
-.listitem2 {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  gap: 8px;
 }
 
 .listitemlist {
