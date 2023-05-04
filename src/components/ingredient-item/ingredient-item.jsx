@@ -1,5 +1,4 @@
 import Style from './ingredient-item.module.css';
-import React from 'react';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypesIngredients from '../utils/prop-types-ingredients';
 import Modal from '../modal/modal';
@@ -7,21 +6,20 @@ import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from "react-redux";
 import { setIngredientDetails, resetIngredientDetails } from '../../services/actions/ingredientDetails';
 import { useDrag } from "react-dnd";
+import { getOrderData, getIngredientData } from '../../components/utils/utils';
 
 
 export default function IngredientItem(props) {
   //работа с модальным окном---------------------------------------------------------------------
-  const [modal, setModal] = React.useState(false);
-  const ingredientData = props.data;
-  const ingredientsStore = useSelector(state => (state.constructorData));
+  const ingredientData = props.data; //получаем ингредиент от родителя для рендера разметки
+  const ingredientDataStore = useSelector(getIngredientData); //получаем ингредиент который попал в хранилище при клике по разметке
+  const ingredientsStore = useSelector(getOrderData); //получаем список ингредиентов в заказе, для счётчика
   const dispatch = useDispatch();
   const openModal = () => {
     dispatch(setIngredientDetails(ingredientData));
-    setModal(true);
   };
   const closeModal = () => {
     dispatch(resetIngredientDetails());
-    setModal(false);
   };
 
 //днд функционал---------------------------------------------------------------------------------
@@ -47,7 +45,7 @@ export default function IngredientItem(props) {
         <CurrencyIcon type="primary" />
       </div>
       <p className={`${Style.text} text text_type_main-default`}>{ingredientData.name}</p>
-      {modal && (
+      {ingredientDataStore && (
         <Modal closeModal={closeModal}>
           <IngredientDetails />
         </Modal>

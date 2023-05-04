@@ -1,9 +1,10 @@
 import Style from './ingredient-details.module.css'
 import { useSelector } from "react-redux";
+import { getIngredientData } from '../../components/utils/utils';
 
 
 export default function IngredientDetails() {
-  const ingredient = useSelector(store => store.ingredientDetails.ingredient);
+  const ingredient = useSelector(getIngredientData); //получаем хранящийся сейчас в сторе ингредиент
 
   return ( 
     <div className={Style.content}>
