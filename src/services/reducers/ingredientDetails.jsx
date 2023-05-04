@@ -4,7 +4,7 @@ import {
 } from '../actions/ingredientDetails';
 
 const initialState = {
-  ingredient: {},
+  ingredient: null,
 }
 
 export function ingredientDetails(state = initialState, action) {
@@ -18,7 +18,7 @@ export function ingredientDetails(state = initialState, action) {
     case RESET_INGREDIENT_DETAILS: {
       return {
         ...state,
-        ingredient: {}
+        ingredient: null
       };
     }
     default:
