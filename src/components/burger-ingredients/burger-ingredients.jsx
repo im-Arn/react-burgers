@@ -3,10 +3,11 @@ import TabMenu from '../tabs/tabs';
 import { useSelector } from "react-redux";
 import IngredientCategory from '../ingredient-category/ingredient-category';
 import { useRef, useState, useMemo } from 'react';
+import { getAllIngredientsData } from '../../components/utils/utils';
 
 export default function BurgerIngredients() {
   //достали ингредиенты из стора и раскидали по разделам
-  const data = useSelector(state => state.ingredients.ingredients);
+  const data = useSelector(getAllIngredientsData);
   const bunsArr = useMemo(
     () => { return data.filter((bun) => bun.type === "bun"); }, [data]);
   const sauceArr = useMemo(

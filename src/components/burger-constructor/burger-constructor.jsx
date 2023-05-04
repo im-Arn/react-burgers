@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchOrder, resetOrderNumber } from '../../services/actions/order';
 import { DraggableElement } from '../draggable-element/draggable-element';
 import { useDrop } from "react-dnd";
+import { getOrderNumber, getOrderData } from '../../components/utils/utils';
 
 
 export default function BurgerConstructor({ onDropHandler }) {
-  const orderNumber = useSelector(state => state.order.number); //достали номер заказа из стора
-  const orderList = useSelector(state => state.constructorData); //достали список ингредиентов лежащих в заказе из стора
+  const orderNumber = useSelector(getOrderNumber); //достали номер заказа из стора
+  const orderList = useSelector(getOrderData); //достали список ингредиентов лежащих в заказе из стора
 
   const dispatch = useDispatch();
   const [totalPrice, setTotalPrice] = useState(0); //хук подсчёта финальной стоимости
@@ -20,7 +21,7 @@ export default function BurgerConstructor({ onDropHandler }) {
 
   //работа с модальным окном и отправка [id] на сервер, получение номера заказа-----------------------
   const openModal = () => {
-    dispatch(fetchOrder(totalIngredientsId));
+    dispatch(fetchOrder(totalIngredientsId)); //состояние модалки определяется наличием номера заказа, отдельное больше не требуется
   }
   const closeModal = () => {
     dispatch(resetOrderNumber(null));
@@ -91,7 +92,7 @@ export default function BurgerConstructor({ onDropHandler }) {
       </ul>
       <div className={`${Style.pricearea} pr-4`}>
         <p className='text text_type_digits-medium mr-9'>{`${totalPrice}`}<CurrencyIcon type="primary" /></p>
-        <Button htmlType="button" type="primary" size="large" onClick={openModal}>
+        <Button htmlType="button" type="primary" size="large" onClick={openModal} disabled={(orderList.bun && orderList.toppings.length > 0) ? false : "disabled"}>
           Оформить заказ
         </Button>
       </div>
