@@ -1,12 +1,23 @@
 import Style from './ingredient-details.module.css'
 import { useSelector } from "react-redux";
-import { getIngredientData } from '../../components/utils/utils';
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAllIngredientsData } from '../../components/utils/utils';
 
 
 export default function IngredientDetails() {
-  const ingredient = useSelector(getIngredientData); //получаем хранящийся сейчас в сторе ингредиент
+  // const ingredient = useSelector(getIngredientData); //получаем хранящийся сейчас в сторе ингредиент
 
-  return ( 
+  const { id } = useParams();
+  const [ingredient, setElement] = useState(null);
+
+  const ingredients = useSelector(getAllIngredientsData);
+
+  useEffect(()=>{
+    setElement(ingredients.find(ing => ing._id === id))
+  }, [ingredients]);
+
+  return ingredient ? (
     <div className={Style.content}>
       <h2 className={`text text_type_main-large ${Style.header}`}>Детали ингредиента</h2>
       <img src={ingredient.image_large} alt={ingredient.name} />
@@ -30,5 +41,5 @@ export default function IngredientDetails() {
         </li>
       </ul>
     </div>
-  );
+  ) : null;
 }
