@@ -5,3 +5,9 @@ export const getOrderNumber = state => state.order.number; //номер зака
 export const getOrderData = state => state.constructorData; //список ингредиентов в заказе
 export const getAllIngredientsData = state => state.ingredients.ingredients; //общий список ингредиентов
 export const getIngredientData = store => store.ingredientDetails.ingredient; //конкретный ингредиент
+
+export const getSuccessUserAuth = store => store.user.isAuthChecked; //пройдена аутентификация
+export const getSuccessResetPassword = store => store.user.isPassReset; //сброшен ли пароль
+export const getSuccessUserData = store => store.user.success;//не знаю что сказать
+export const getUserData = store => store.user;//запрос данных авторизованного пользователя
+export const getSuccessPassRecover = store => store.user.isPassRecover; //проверка на запрос о восстановлении пароля
