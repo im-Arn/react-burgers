@@ -43,17 +43,15 @@ export default function LoginPage() {
       <form className={Style.form} onSubmit={handlerSubmit}>
         <EmailInput
           placeholder={'E-mail'}
-          type="email"
+          name="email"
           required
           value={email}
           onChange={onChangeEmail}
         />
-        {/* c глазиком ничего поделать не могу, его функционал полностью из библиотеки яндекса. она часто встаёт криво,
-        сейчас переустановила её три раза, глаз не изменился, а вот всё остальное еле починила обратно :( */}
+        {/* в документации указан пропс type, а нужен name */}
         <PasswordInput
           placeholder={'Пароль'}
-          icon={"HideIcon"}
-          type="password"
+          name="password"
           required
           value={password}
           onChange={onChangePassword}

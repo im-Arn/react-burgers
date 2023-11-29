@@ -103,7 +103,7 @@ export default function ProfilePage() {
           <form className={Style.inputs} onReset={handlerReset} onSubmit={handlerSubmit}>
             <Input
               placeholder={'Имя'}
-              type="text"
+              name="text"
               required
               value={name}
               onChange={onChangeName}
