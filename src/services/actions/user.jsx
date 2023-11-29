@@ -1,5 +1,5 @@
 import { api } from "../../components/utils/Api";
-import { setCookie } from "../../components/utils/cookies";
+import { setCookie, getCookie } from "../../components/utils/cookies";
 
 export const FETCH_REGISTER_REQUEST = 'FETCH_REGISTER_REQUEST';
 export const FETCH_REGISTER_SUCCESS = 'FETCH_REGISTER_SUCCESS';
@@ -91,7 +91,8 @@ export function fetchAuthUserSuccess(data) {
     type: FETCH_AUTH_USER_SUCCESS,
     email: data.user.email,
     name: data.user.name,
-    success: data.success
+    success: data.success,
+    isAuthChecked: data.success,
   };
 };
 /** action creator ошибки обновления данных пользователя */
@@ -216,17 +217,29 @@ export function updateUserToken(token) {
   }
 };
 
-/** action обновления данных авторизованного пользователя */
-export function updateCurrentUser(accessToken, refreshToken) {
+
+
+
+/**action обновления данных авторизованного пользователя */
+export function updateCurrentUser() {
   return async function (dispatch) {
     dispatch(fetchAuthUserRequest());
-    try {
-      const response = await api.checkUser("Bearer " + accessToken);
-      const data = await response;
-      dispatch(fetchAuthUserSuccess(data));
-    } catch (error) {
-      dispatch(fetchAuthUserFailed(error));
-      dispatch(updateUserToken(refreshToken));
+    if (getCookie('accessToken')) {
+      try {
+        const response = await api.checkUser(); //пробую авторизоваться
+        const data = await response;
+        dispatch(fetchAuthUserSuccess(data));
+      } catch (err) {
+        console.log('Обработка ошибки после catch', err);
+        if (err.message === 'jwt expired' || 'jwt malformed' || 'You should be authorised') {
+          updateUserToken(getCookie('refreshToken'));//рефрешу токен и записываю в куки
+          const response = await api.checkUser(); //снова пробую авторизоваться
+          const data = await response;
+          dispatch(fetchAuthUserSuccess(data));
+        } else {
+          dispatch(fetchAuthUserFailed(err));
+        }
+      }
     }
   }
 };
@@ -278,15 +291,41 @@ export function passwordReset(inputPassword, inputCode) {
 };
 
 /** action изменения данных пользователя */
-export function editUser(user, accessToken) {
+export function editUser(user) {
   return async function (dispatch) {
     dispatch(fetchEditUserRequest());
-    try {
-      const response = await api.editUserData(user, "Bearer " + accessToken);
-      const data = await response;
-      dispatch(fetchEditUserSuccess(data));
-    } catch (error) {
-      dispatch(fetchEditUserFailed(error));
+    if (getCookie('accessToken')) {
+      try {
+        const response = await api.editUserData(user);
+        const data = await response;
+        dispatch(fetchEditUserSuccess(data));
+      } catch (error) {
+        if (err.message === 'jwt expired' || 'jwt malformed' || 'You should be authorised') {
+          dispatch(updateUserToken(getCookie('refreshToken')));//рефрешу токен и записываю в куки
+          const response = await api.editUserData(user); //снова пробую авторизоваться
+          const data = await response;
+          dispatch(fetchEditUserSuccess(data));
+        } else {
+          dispatch(fetchEditUserFailed(error));
+        }
+      }
     }
   }
 };
+
+/** старый action обновления данных авторизованного пользователя */
+// export function updateCurrentUser() {
+//   return async function (dispatch) {
+//     dispatch(fetchAuthUserRequest());
+//     const accessToken = getCookie('accessToken'); //проверяю куки на токен
+//     const refreshToken = getCookie('refreshToken');
+//     try {
+//       const response = await api.checkUser("Bearer " + accessToken); //пробую авторизоваться
+//       const data = await response;
+//       dispatch(fetchAuthUserSuccess(data));
+//     } catch (error) {
+//       dispatch(fetchAuthUserFailed(error));
+//       dispatch(updateUserToken(refreshToken)); //рефрешу токен
+//     }
+//   }
+// };

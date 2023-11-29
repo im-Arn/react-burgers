@@ -53,7 +53,6 @@ export const user = (state = initialState, action) => {
         success: action.success,
         email: action.email,
         name: action.name,
-        isAuthChecked: true,
         accessToken: action.accessToken,
         refreshToken: action.refreshToken
       };
@@ -81,7 +80,6 @@ export const user = (state = initialState, action) => {
         name: action.name,
         accessToken: action.accessToken,
         refreshToken: action.refreshToken,
-        isAuthChecked: true,
       };
     }
     case FETCH_LOGIN_FAILED: {
@@ -116,6 +114,7 @@ export const user = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
+        isAuthChecked: true,
       };
     }
     case FETCH_AUTH_USER_SUCCESS: {
@@ -124,7 +123,7 @@ export const user = (state = initialState, action) => {
         success: action.success,
         email: action.email,
         name: action.name,
-        isAuthChecked: true,
+        isAuthChecked: action.success,
       };
     }
     case FETCH_AUTH_USER_FAILED: {
@@ -132,7 +131,6 @@ export const user = (state = initialState, action) => {
         ...state,
         success: false,
         loading: false,
-        isAuthChecked: false, //может крашить
       };
     }
     case FETCH_LOGOUT_REQUEST: {
@@ -146,7 +144,8 @@ export const user = (state = initialState, action) => {
         ...state,
         loading: false,
         success: action.success,
-        isAuthChecked: false
+        email: "",
+        name: "",
       }
     }
     case FETCH_LOGOUT_FAILED: {
