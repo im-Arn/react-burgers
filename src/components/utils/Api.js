@@ -1,5 +1,4 @@
 import { SERVER_URL } from "../utils/serverUrl";
-import { getCookie } from "../utils/cookies";
 
 class Api {
   constructor(server) {
@@ -21,22 +20,6 @@ class Api {
    */
   getIngredients() {
     return fetch(`${this._server}ingredients`)
-      .then((res) => this._getResponse(res))
-  };
-  /**
-   * Публичный метод отправки массива айди и получения номера заказа с сервера
-   */
-  getOrderNumber(data) {
-    return fetch(`${this._server}orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: "Bearer " + getCookie('accessToken'),
-      },
-      body: JSON.stringify({
-        "ingredients": data,
-      })
-    })
       .then((res) => this._getResponse(res))
   };
 
@@ -82,19 +65,6 @@ class Api {
       .then((res) => this._getResponse(res));
   }
   /**
-   * Публичный метод обновления авторизации пользователя
-   */
-  checkUser() {
-    return fetch(`${this._server}auth/user`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: "Bearer " + getCookie('accessToken'),
-      },
-    })
-      .then((res) => this._getResponse(res));
-  }
-  /**
    * Публичный метод выхода пользователя из системы
    */
   logOut(refreshToken) {
@@ -136,19 +106,6 @@ class Api {
         "password": inputPassword,
         "token": inputCode,
       }),
-    }).then((res) => this._getResponse(res));
-  }
-  /**
-   * Публичный метод обновления информации пользователя
-   */
-  editUserData(user) {
-    return fetch(`${this._server}auth/user`, {
-      method: 'PATCH',
-      headers: {
-        "Content-Type": "application/json",
-        authorization: "Bearer " + getCookie('accessToken'),
-      },
-      body: JSON.stringify(user),
     }).then((res) => this._getResponse(res));
   }
 };

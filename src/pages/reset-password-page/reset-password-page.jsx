@@ -50,14 +50,14 @@ export default function PasswordResetPage() {
       <form className={Style.form} onSubmit={handlerSubmit}>
         <PasswordInput
           placeholder={"Введите новый пароль"}
-          type="password"
+          name="password"
           required
           value={password}
           onChange={onChangePassword}
         />
         <Input
           placeholder={"Введите код из письма"}
-          type="text"
+          name="text"
           required
           value={code}
           onChange={onChangeCode}
