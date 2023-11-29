@@ -6,7 +6,7 @@ import IngredientDetails from '../ingredient-details/ingredient-details'
 import { useDispatch, useSelector } from "react-redux";
 import { setIngredientDetails, resetIngredientDetails } from '../../services/actions/ingredientDetails';
 import { useDrag } from "react-dnd";
-import { useNavigate, useMatch, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useMatch, useLocation } from "react-router-dom";
 import { getOrderData } from '../../components/utils/utils';
 
 
@@ -37,6 +37,13 @@ export default function IngredientItem(props) {
     });
   };
 
+  const onClick = () => {
+    if (id !== ingredientData._id) {
+      navigate(`/ingredients/${ingredientData._id}`, { state: { modal: true, background: location } });
+    }
+    openModal();
+  };
+
   //днд функционал---------------------------------------------------------------------------------
   const [{ isDrag }, dragRef] = useDrag({
     type: "ingredient",
@@ -53,12 +60,7 @@ export default function IngredientItem(props) {
 
   return (
     <li className={Style.listitem} style={isDrag ? { opacity: "0.7" } : { opacity: "1" }}
-      onClick={() => {
-        if (id !== ingredientData._id) {
-          navigate(`/ingredients/${ingredientData._id}`, { state: { modal: true, background: location } });
-        }
-        openModal();
-      }}
+      onClick={onClick}
       ref={dragRef} key={ingredientData.key}>
       <img src={ingredientData.image} alt={ingredientData.name}></img>
       {count > 0 && <Counter count={count} size="default" extraClass="m-1" />}
