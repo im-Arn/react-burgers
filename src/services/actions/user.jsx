@@ -232,7 +232,7 @@ export function updateCurrentUser() {
       } catch (err) {
         console.log('Обработка ошибки после catch', err);
         if (err.message === 'jwt expired' || 'jwt malformed' || 'You should be authorised') {
-          updateUserToken(getCookie('refreshToken'));//рефрешу токен и записываю в куки
+          dispatch(updateUserToken(getCookie('refreshToken')));//рефрешу токен и записываю в куки
           const response = await api.checkUser(); //снова пробую авторизоваться
           const data = await response;
           dispatch(fetchAuthUserSuccess(data));
