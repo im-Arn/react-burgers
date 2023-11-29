@@ -8,8 +8,6 @@ import PasswordForgotPage from '../../pages/forgot-password-page/forgot-password
 import PasswordResetPage from '../../pages/reset-password-page/reset-password-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import IngredientPage from '../../pages/ingredient-page/ingredient-page';
-import IngredientDetails from '../ingredient-details/ingredient-details';
-import { getCookie } from '../../components/utils/cookies';
 import { updateCurrentUser } from '../../services/actions/user'; //actions
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -27,13 +25,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchIngredients());
-    const accessToken = getCookie('accessToken'); //проверяю куки на токен
-    const refreshToken = getCookie('refreshToken'); //проверяю куки на токен
-    if (accessToken && refreshToken) {
-      dispatch(updateCurrentUser(accessToken, refreshToken));
-    }//обновляю данные пользователя если он авторизован
-    //оставляю этот dispatch в экшене проверки аутен. пользователя
-    // else { dispatch(updateUserToken(refreshToken)); }
+    dispatch(updateCurrentUser());
   }, [dispatch]);
 
   return (

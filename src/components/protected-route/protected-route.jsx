@@ -1,11 +1,16 @@
 import { useSelector } from "react-redux";
 import PropTypes from 'prop-types';
 import { Navigate, useLocation } from "react-router-dom";
-import { getSuccessUserAuth, getUserData } from "../utils/utils";
+import { getSuccessUserAuth, getUserDataName } from "../utils/utils";
 
 const Protected = ({ onlyUnAuth = false, component }) => {
-  const user = useSelector(getSuccessUserAuth);
+  const isAuthChecked = useSelector(getSuccessUserAuth);
+  const user = useSelector(getUserDataName);
   const location = useLocation();
+
+  if (!isAuthChecked) {
+    return <p className="text text_type_main-large">Load</p>;
+  }
 
   if (onlyUnAuth && user) {
     // Пользователь авторизован, но роут предназначен для неавторизованного пользователя
@@ -19,7 +24,6 @@ const Protected = ({ onlyUnAuth = false, component }) => {
   }
 
   // !onlyUnAuth && user Пользователь авторизован и роут для авторизованного пользователя
-
   return component;
 };
 

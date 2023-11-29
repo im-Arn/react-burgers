@@ -10,4 +10,5 @@ export const getSuccessUserAuth = store => store.user.isAuthChecked; //прой�
 export const getSuccessResetPassword = store => store.user.isPassReset; //сброшен ли пароль
 export const getSuccessUserData = store => store.user.success;//не знаю что сказать
 export const getUserData = store => store.user;//запрос данных авторизованного пользователя
+export const getUserDataName = store => store.user.name;
 export const getSuccessPassRecover = store => store.user.isPassRecover; //проверка на запрос о восстановлении пароля

@@ -1,4 +1,6 @@
 import { api } from "../../components/utils/Api";
+import { updateUserToken } from "./user";
+import { getCookie } from "../../components/utils/cookies";
 
 export const FETCH_ORDER_REQUEST = "FETCH_ORDER_REQUEST";
 export const FETCH_ORDER_SUCCESS = "FETCH_ORDER_SUCCESS";
@@ -29,15 +31,24 @@ export function fetchOrderFailure(error) {
 export function fetchOrder(dataArray) {
   return async function (dispatch) {
     dispatch(fetchOrderRequest());
-    try {
-      const response = await api.getOrderNumber(dataArray);
-      const data = await response.order.number;
-      dispatch(fetchOrderSuccess(data));
-    } catch (error) {
-      dispatch(fetchOrderFailure(error));
-      console.log(error);
+    if (getCookie('accessToken')) {
+      try {
+        const response = await api.getOrderNumber(dataArray);
+        const data = await response.order.number;
+        dispatch(fetchOrderSuccess(data));
+      } catch (error) {
+        if (error.message === 'jwt expired' || 'jwt malformed' || 'You should be authorised') {
+          dispatch(updateUserToken(getCookie('refreshToken')));//рефрешу токен и записываю в куки
+          const response = await api.getOrderNumber(dataArray); //снова пробую отослать заказ
+          const data = await response;
+          dispatch(fetchOrderSuccess(data));
+        } else {
+          dispatch(fetchOrderFailure(error));
+          console.log(error);
+        }
+      }
     }
-  };
+  }
 }
 
 /**

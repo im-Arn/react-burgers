@@ -9,7 +9,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { NavLink, useParams } from 'react-router-dom';
 import NotFoundPage from "../not-found-page/not-found-page";
-import { logOut, updateCurrentUser, editUser } from '../../services/actions/user';
+import { logOut, editUser } from '../../services/actions/user';
 import { getCookie } from '../../components/utils/cookies';
 import { getUserData } from '../../components/utils/utils';
 
@@ -35,12 +35,6 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
-  //поддержание актуальных данных полей
-  useEffect(() => {
-    const accessToken = getCookie('accessToken'); //проверяю куки на токен
-    const refreshToken = getCookie('refreshToken'); //проверяю куки на токен
-    dispatch(updateCurrentUser(accessToken, refreshToken));
-  }, [dispatch]);
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -59,8 +53,7 @@ export default function ProfilePage() {
       "name": name,
       "password": password,
     };
-    const accessToken = getCookie('accessToken');
-    dispatch(editUser(editedUser, accessToken));
+    dispatch(editUser(editedUser));
     setPassword("");
     setIsEditing(false);
   };

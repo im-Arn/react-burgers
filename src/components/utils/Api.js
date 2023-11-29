@@ -1,4 +1,5 @@
 import { SERVER_URL } from "../utils/serverUrl";
+import { getCookie } from "../utils/cookies";
 
 class Api {
   constructor(server) {
@@ -29,7 +30,8 @@ class Api {
     return fetch(`${this._server}orders`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        authorization: "Bearer " + getCookie('accessToken'),
       },
       body: JSON.stringify({
         "ingredients": data,
@@ -82,12 +84,12 @@ class Api {
   /**
    * Публичный метод обновления авторизации пользователя
    */
-  checkUser(accessToken) {
+  checkUser() {
     return fetch(`${this._server}auth/user`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: accessToken,
+        authorization: "Bearer " + getCookie('accessToken'),
       },
     })
       .then((res) => this._getResponse(res));
@@ -139,12 +141,12 @@ class Api {
   /**
    * Публичный метод обновления информации пользователя
    */
-  editUserData(user, accessToken) {
+  editUserData(user) {
     return fetch(`${this._server}auth/user`, {
       method: 'PATCH',
       headers: {
         "Content-Type": "application/json",
-        authorization: accessToken,
+        authorization: "Bearer " + getCookie('accessToken'),
       },
       body: JSON.stringify(user),
     }).then((res) => this._getResponse(res));
