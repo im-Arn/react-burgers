@@ -1,4 +1,6 @@
-import { api } from "../../components/utils/Api";
+import { getCookie } from "../../components/utils/cookies";
+import { fetchWithRefresh } from "./user";
+import { SERVER_URL } from "../../components/utils/serverUrl";
 
 export const FETCH_ORDER_REQUEST = "FETCH_ORDER_REQUEST";
 export const FETCH_ORDER_SUCCESS = "FETCH_ORDER_SUCCESS";
@@ -14,7 +16,7 @@ export function fetchOrderRequest() {
  * action creator успешного получения данных с сервера
  */
 export function fetchOrderSuccess(data) {
-  return { type: FETCH_ORDER_SUCCESS, number: data };
+  return { type: FETCH_ORDER_SUCCESS, number: data.order.number };
 }
 /**
  * action creator ошибки получения данных с сервера
@@ -26,18 +28,26 @@ export function fetchOrderFailure(error) {
 /**
  * action получения номера заказа с сервера
  */
-export function fetchOrder(dataArray) {
+export function fetchOrder(ingredients) {
   return async function (dispatch) {
-    dispatch(fetchOrderRequest());
-    try {
-      const response = await api.getOrderNumber(dataArray);
-      const data = await response.order.number;
-      dispatch(fetchOrderSuccess(data));
-    } catch (error) {
-      dispatch(fetchOrderFailure(error));
-      console.log(error);
-    }
-  };
+    return fetchWithRefresh(dispatch, `${SERVER_URL}orders`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: "Bearer " + getCookie('accessToken'),
+        },
+        body: JSON.stringify({
+          "ingredients": ingredients,
+        })
+      },
+      {
+        request: fetchOrderRequest,
+        success: fetchOrderSuccess,
+        failure: fetchOrderFailure,
+      }
+    );
+  }
 }
 
 /**
@@ -49,3 +59,48 @@ export function resetOrderNumber(dataNumber) { //надеюсь вы писал�
     number: dataNumber
   }
 }
+
+// export function fetchOrder(dataArray) {
+//   return async function (dispatch) {
+//     dispatch(fetchOrderRequest());
+//     if (getCookie('accessToken')) {
+//       try {
+//         const response = await api.getOrderNumber(dataArray);
+//         const data = await response.order.number;
+//         dispatch(fetchOrderSuccess(data));
+//       } catch (error) {
+//         if (['jwt expired', 'jwt malformed'].includes(error.message)) {
+//           dispatch(updateUserToken(getCookie('refreshToken')));//рефрешу токен и записываю в куки
+//           const response = await api.getOrderNumber(dataArray); //снова пробую отослать заказ
+//           const data = await response.order.number;
+//           dispatch(fetchOrderSuccess(data));
+//         } else {
+//           dispatch(fetchOrderFailure(error));
+//           console.log(error);
+//         }
+//       }
+//     }
+//   }
+// }
+// export function fetchOrder(dataArray) {
+//   return async function (dispatch) {
+//     dispatch(fetchOrderRequest());
+//     if (getCookie('accessToken')) {
+//       try {
+//         const response = await api.getOrderNumber(dataArray);
+//         const data = await response.order.number;
+//         dispatch(fetchOrderSuccess(data));
+//       } catch (error) {
+//         if (['jwt expired', 'jwt malformed'].includes(error.message)) {
+//           dispatch(updateUserToken(getCookie('refreshToken')));//рефрешу токен и записываю в куки
+//           const response = await api.getOrderNumber(dataArray); //снова пробую отослать заказ
+//           const data = await response;
+//           dispatch(fetchOrderSuccess(data));
+//         } else {
+//           dispatch(fetchOrderFailure(error));
+//           console.log(error);
+//         }
+//       }
+//     }
+//   }
+// }

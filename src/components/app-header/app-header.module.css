@@ -19,3 +19,11 @@
   margin: auto auto auto 104px;
   height: 50px;
 }
+
+.menuitem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+  color: unset;
+}

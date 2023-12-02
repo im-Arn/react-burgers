@@ -9,23 +9,36 @@ import { fetchOrder, resetOrderNumber } from '../../services/actions/order';
 import { DraggableElement } from '../draggable-element/draggable-element';
 import { useDrop } from "react-dnd";
 import { getOrderNumber, getOrderData } from '../../components/utils/utils';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getSuccessUserAuth } from "../utils/utils";
 
 
 export default function BurgerConstructor({ onDropHandler }) {
   const orderNumber = useSelector(getOrderNumber); //достали номер заказа из стора
   const orderList = useSelector(getOrderData); //достали список ингредиентов лежащих в заказе из стора
+  const isAuthenticated = useSelector(getSuccessUserAuth); //достали сведения об аутентификации
 
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [totalPrice, setTotalPrice] = useState(0); //хук подсчёта финальной стоимости
   const [totalIngredientsId, setTotalIngredientsId] = useState(null); //хук сборки id для отправки на сервер
 
   //работа с модальным окном и отправка [id] на сервер, получение номера заказа-----------------------
   const openModal = () => {
-    dispatch(fetchOrder(totalIngredientsId)); //состояние модалки определяется наличием номера заказа, отдельное больше не требуется
+    if (isAuthenticated) {
+      dispatch(fetchOrder(totalIngredientsId)); //состояние модалки определяется наличием номера заказа, отдельное больше не требуется
+    } else {
+      navigate('/login', {
+        replace: true,
+        state: { from: location.pathname }
+      });
+    }
   }
   const closeModal = () => {
     dispatch(resetOrderNumber(null));
   }
+
 
   //dnd функционал -----------------------------------------------------------------------------------
   const [{ isHover }, dropTargetRef] = useDrop({
@@ -60,7 +73,7 @@ export default function BurgerConstructor({ onDropHandler }) {
   return (
     <section className={`${Style.section}`}>
       <ul className={`${Style.list}`} ref={dropTargetRef} style={isHover ? { boxShadow: "inset 0px 0px 35px 21px rgba(195,31,255,0.45)" } : { boxShadow: "none" }}>
-      {/*индикатор возможности отправки заказа, отключается только при наличии булочки и одного ингредиента */}
+        {/*индикатор возможности отправки заказа, отключается только при наличии булочки и одного ингредиента */}
         {!(orderList.bun && orderList.toppings.length > 0) && (<p style={{ margin: "auto" }} className={`text text_type_main-medium`}>Несите яства!</p>)}
         {orderList.bun ? (<li className={`${Style.listitem} pr-4`} key={1}>
           <ConstructorElement
@@ -75,7 +88,7 @@ export default function BurgerConstructor({ onDropHandler }) {
           <ul className={Style.list2}>
             {orderList.toppings && (orderList.toppings.map(function (ingredient, index) {
               return (
-                <DraggableElement ingredient={ingredient} index={index} key={ingredient.uid}/>
+                <DraggableElement ingredient={ingredient} index={index} key={ingredient.uid} />
               )
             }))}
           </ul>

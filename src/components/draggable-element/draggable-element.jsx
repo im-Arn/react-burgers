@@ -12,7 +12,7 @@ export function DraggableElement(props) {
   const dispatch = useDispatch();
 
   const move = useCallback((dragIndex, hoverIndex) => {
-    dispatch(moveConstructorIngredient(dragIndex, hoverIndex))
+    dispatch(moveConstructorIngredient(dragIndex, hoverIndex)) // eslint-disable-next-line
   }, []);
 
   const [{ isDrag }, drag] = useDrag({
