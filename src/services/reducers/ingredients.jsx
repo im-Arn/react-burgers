@@ -24,6 +24,7 @@ export const ingredients = (state = initialState, action) => {
       return {
         ...state,
         isloading: false,
+        isload: true,
         ingredients: action.ingredients,
       };
     }
@@ -32,6 +33,7 @@ export const ingredients = (state = initialState, action) => {
       return {
         ...state,
         isloading: false,
+        isload: false,
         ingredients: [],
       };
     }
