@@ -1,5 +1,4 @@
 import Style from './ingredients-bar.module.css';
-import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from "react-redux";
 import PropTypes from 'prop-types';
 import { getAllIngredientsData } from '../utils/utils';
@@ -16,7 +15,7 @@ export default function IngredientsBar({ ingredientsProps }) {
             if (ingredients.length > 5) {
               if (index === 5) {
                 return (
-                  <li key={uuidv4()} style={{ zIndex: index }} className={`${Style.imgList}`}>
+                  <li key={index} style={{ zIndex: index }} className={`${Style.imgList}`}>
                     <div className={`${Style.shadeBox}`}>
                       <p className={`text text_type_digits-default ${Style.counter}`}>+{ingredients.length - 5}</p>
                     </div>
@@ -29,7 +28,7 @@ export default function IngredientsBar({ ingredientsProps }) {
             }
             if (index >= 0 && index <= 5) {
               return (
-                <li key={uuidv4()} style={{ zIndex: 10 - index }} className={Style.imgList}>
+                <li key={index} style={{ zIndex: 10 - index }} className={Style.imgList}>
                   <img src={allIngredients.find((el) => el._id === ingredient).image_mobile}
                     alt={allIngredients.find((el) => el._id === ingredient).name}
                     className={Style.image} />

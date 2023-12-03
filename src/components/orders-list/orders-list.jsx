@@ -10,7 +10,6 @@ import {
 } from '../../components/utils/utils';
 import Modal from "../../components/modal/modal";
 import { useLocation, useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 
 export default function OrdersList() {
@@ -36,12 +35,14 @@ export default function OrdersList() {
           const ingredients = order.ingredients;
           const time = <FormattedDate date={new Date(order?.createdAt)} />;
           return (
-            <li className={Style.orderElement} key={uuidv4()} onClick={() => {
+            <li className={Style.orderElement} key={order._id} onClick={() => {
               navigate(`/feed/${_id}`, { state: { modal: true, background: location } });
             }}>
               <div className={`${Style.infoOrder} mb-6`}>
                 <p className="text text_type_digits-default">#{order.number}</p>
                 <p className="text text_type_main-default text_color_inactive">
+                {/* у меня time как раз при помощи этого компонента отформатировано. но компонент не возвращает разметку часового пояса, 
+                а она есть в нашем макете. Вы рекомендуете проигнорировать её или может я знаю какой-то пропс компонента? ходя в документации их всего два. */}
                   {time}{setDate(order.createdAt)}
                 </p>
               </div>

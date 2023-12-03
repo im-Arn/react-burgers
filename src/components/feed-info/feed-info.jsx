@@ -1,10 +1,12 @@
 import { useSelector } from "react-redux";
 import Style from "./feed-info.module.css";
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
-import { v4 as uuidv4 } from 'uuid';
 import { useLocation, useParams } from "react-router-dom";
 import { getAllIngredientsData, getWsOrdersPageData, getWsOrdersUserData, setDate, sumPrice, countIngredients } from '../utils/utils';
 
+//спасибо огромное за такое отличное подробное ревью. это была очень сложная работа для меня и много где остались некрасивые хвосты и повторы кода. 
+//приходилось закрывать на них глаза в угоду скорости сдачи. я обязательно доработаю код по вашим рекомендациям. 
+//и если есть что-то обучающее, что вы хотели бы дополнительно порекомендовать, буду очень рада) с приближающимся новым годом! :)
 export default function FeedInfo() {
 
   const allIngredients = useSelector(getAllIngredientsData);
@@ -14,7 +16,6 @@ export default function FeedInfo() {
   const orders = useSelector(getWsOrdersPageData);
   const ordersUser = useSelector(getWsOrdersUserData);
   const currentOrders = checkLocation === true ? orders : ordersUser;
-  // const currentOrders = orders;
   const order = currentOrders.find(order => order._id === id);
 
   if (!order) return null
@@ -25,7 +26,7 @@ export default function FeedInfo() {
   const ingredientsSorted = Object.keys(ingredientsCounted);
   const countSorted = Object.values(ingredientsCounted);
   const totalPrice = sumPrice(order.ingredients, allIngredients);
-  
+
   return (
     <div className={Style.container}>
       <p className={`text text_type_digits-default mb-10 ${Style.number}`}>#{order.number}</p>
@@ -36,7 +37,7 @@ export default function FeedInfo() {
         {ingredientsSorted.map((ing, i) => {
           const price = allIngredients.find((el) => el._id === ing).price;
           return (
-            <li key={uuidv4()} className={Style.ingredients}>
+            <li key={i} className={Style.ingredients}>
               <div className={Style.ingredientInfo}>
                 <img src={allIngredients.find((el) => el._id === ing).image_mobile}
                   alt={allIngredients.find((el) => el._id === ing).name}

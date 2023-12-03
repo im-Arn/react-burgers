@@ -10,7 +10,6 @@ import {
   sumPrice,
 } from '../../components/utils/utils';
 import { useLocation, useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -22,7 +21,6 @@ export default function ProfileOrdersPage() {
   const userData = useSelector(getUserDataName);
 
   useEffect(() => {
-    // console.log('я ProfileOrdersPage, я диспатчу USERws', getCookie("accessToken"));
     dispatch({
       type: WS_CONNECTION_START_USER,
       payload: getCookie("accessToken")
@@ -37,9 +35,7 @@ export default function ProfileOrdersPage() {
 
   const allIngredients = useSelector(getAllIngredientsData); // все ингредиенты
   const userOrders = useSelector(getWsOrdersUserData); //получить список заказов с хранилища вебсокета
-  // const userOrders = useSelector(getWsOrdersPageData);
 
- 
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -52,7 +48,7 @@ export default function ProfileOrdersPage() {
           const time = <FormattedDate date={new Date(order?.createdAt)} />;
           const status = order.status === 'done' ? 'Выполнен' : 'Готовится';
           return (
-            <li className={Style.orderElement} key={uuidv4()} onClick={() => {
+            <li className={Style.orderElement} key={order._id} onClick={() => {
               navigate(`/profile/orders/${_id}`, { state: { modal: true, background: location } });
             }}>
               <div className={`${Style.infoOrder} mb-6`}>
