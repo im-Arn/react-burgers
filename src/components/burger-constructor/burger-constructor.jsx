@@ -26,7 +26,6 @@ export default function BurgerConstructor({ onDropHandler }) {
 
   //работа с модальным окном и отправка [id] на сервер, получение номера заказа-----------------------
   const openModal = () => {
-    console.log(isAuthenticated);
     if (isAuthenticated) {
       dispatch(fetchOrder(totalIngredientsId)); //состояние модалки определяется наличием номера заказа, отдельное больше не требуется
     } else {

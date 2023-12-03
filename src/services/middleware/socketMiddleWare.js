@@ -21,7 +21,6 @@ export const socketMiddleware = (wsUrl, wsActions) => {
 
       if (socket) {
         socket.onopen = (event) => {
-          console.log(`Middleware соединение ${wsUrl} установлено`);
           dispatch({
             type: onOpen,
             payload: event,

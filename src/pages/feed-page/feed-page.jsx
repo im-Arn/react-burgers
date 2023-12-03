@@ -24,7 +24,6 @@ export default function FeedPage() {
     }
   }, []);
 
-  // const allIngredients = useSelector(getAllIngredientsData); // все ингредиенты
   const orders = useSelector(getWsOrdersPageData); //получить список заказов с хранилища вебсокета
   const total = useSelector(getWsOrdersPageTotal); //получить число всех заказов с хранилища вебсокета
   const totalToday = useSelector(getWsOrdersPageTotalToday); //получить число заказов за сегодня с хранилища вебсокета
