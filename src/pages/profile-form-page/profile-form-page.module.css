@@ -1,0 +1,13 @@
+.inputs {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  gap: 24px;
+  margin-top: 76px;
+}
+
+.buttons {
+  align-self: end;
+  display: flex;
+  /* gap: 28px; */
+}

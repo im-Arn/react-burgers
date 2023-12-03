@@ -1,0 +1,26 @@
+.orderStatus {
+  width: 272px;
+  padding: 0px;
+}
+
+.ordersNumbers {
+  max-height: 330px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  row-gap: 8px;
+  list-style: none;
+  padding: 0 0 4px 0px;
+  overflow: auto;
+  scrollbar-color: rgba(133, 133, 173, 1);
+  scrollbar-width: thin;
+}
+
+.ordersDone {
+  color: #00CCCC;
+}
+
+.elementList {
+  width: 50%;
+}
+
