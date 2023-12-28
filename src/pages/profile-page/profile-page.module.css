@@ -1,13 +1,14 @@
 .profile {
   display: flex;
-  gap: 60px;
+  gap: 50px;
   max-width: 1240px;
-  margin: 120px auto 0;
+  margin: 44px auto 0;
 }
 
 .nav {
   display: flex;
   flex-direction: column;
+  margin-top: 76px;
   max-width: 320px;
 }
 
@@ -20,7 +21,7 @@
   padding: 17px 0 17px;
 }
 
-.element:hover {
+.list_item:hover {
   opacity: 60%;
   transition: all 0.6s;
 }
@@ -37,16 +38,4 @@
   margin: 0;
   color: #8585AD;
   opacity: 40%;
-}
-
-.inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.buttons {
-  align-self: end;
-  display: flex;
-  /* gap: 28px; */
 }

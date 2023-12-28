@@ -16,9 +16,9 @@ function AppHeader() {
             Конструктор
           </p>
         </NavLink>
-        <NavLink to="/" className={`${Style.menuitem} p-5`}>
-          <ListIcon type="secondary" />
-          <p className="text text_type_main-default text_color_inactive pl-2">Лента заказов</p>
+        <NavLink to="/feed" className={`${Style.menuitem} p-5`}>
+          <ListIcon type={location.pathname === "/feed" ? "primary" : "secondary"} />
+          <p className={`text text_type_main-default pl-2 ${location.pathname === "/feed" ? '' : "text_color_inactive"}`}>Лента заказов</p>
         </NavLink>
         <NavLink to="/" className={Style.logo}>
             <Logo />

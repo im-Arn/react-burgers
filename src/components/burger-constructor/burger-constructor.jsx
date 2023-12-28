@@ -10,13 +10,13 @@ import { DraggableElement } from '../draggable-element/draggable-element';
 import { useDrop } from "react-dnd";
 import { getOrderNumber, getOrderData } from '../../components/utils/utils';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getSuccessUserAuth } from "../utils/utils";
+import { getSuccessUserAuth, getSuccessUserData } from "../utils/utils";
 
 
 export default function BurgerConstructor({ onDropHandler }) {
   const orderNumber = useSelector(getOrderNumber); //достали номер заказа из стора
   const orderList = useSelector(getOrderData); //достали список ингредиентов лежащих в заказе из стора
-  const isAuthenticated = useSelector(getSuccessUserAuth); //достали сведения об аутентификации
+  const isAuthenticated = useSelector(getSuccessUserData); //достали сведения об аутентификации //был getSuccessUserAuth, показалось что багует. хотя это может из-за пинга.
 
   const location = useLocation();
   const navigate = useNavigate();

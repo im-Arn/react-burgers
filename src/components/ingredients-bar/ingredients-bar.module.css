@@ -1,0 +1,39 @@
+.ingredientsBar {
+  height: 68px;
+  padding: 0 0 0 15px;
+  display: flex;
+  justify-content: flex-start;
+  list-style: none;
+}
+
+.imgList {
+  position: relative;
+  margin-left: -15px;
+}
+
+.shadeBox {
+  position:absolute;
+  display: flex;
+  top: 2px;
+  left: 2px;
+  width: 63px;
+  height: 63px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+}
+
+.counter {
+  font-size: 20px;
+  margin: auto;
+}
+
+.image {
+  top: 0;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  object-position: center;
+  background-color: #131316;
+  border-radius: 50%;
+  border: 2px solid rgba(128, 26, 178, 1);
+}
