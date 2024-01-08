@@ -1,11 +1,21 @@
 import {
-  WS_CONNECTION_SUCCESS, 
-  WS_CONNECTION_ERROR, 
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_ERROR,
   WS_CONNECTION_CLOSED,
   WS_GET_MESSAGE
 } from "../actions/wsFeed";
+import { TOrderData } from "../types/types";
+import { TWebSocketActions } from "../actions/wsFeed";
 
-const initialState = {
+type TWebSocketOrdersState = {
+  wsConnected: boolean,
+  orders: TOrderData[],
+  total: number,
+  totalToday: number,
+  error: null | string,
+}
+
+const initialState: TWebSocketOrdersState = {
   wsConnected: false,
   orders: [],
   total: 0,
@@ -13,7 +23,7 @@ const initialState = {
   error: null,
 }
 
-export const wsOrders = (state = initialState, action) => {
+export const wsOrders = (state = initialState, action: TWebSocketActions): TWebSocketOrdersState => {
   switch (action.type) {
     case WS_CONNECTION_SUCCESS: {
       return {
@@ -41,7 +51,7 @@ export const wsOrders = (state = initialState, action) => {
         orders: action.payload.orders,
         total: action.payload.total,
         totalToday: action.payload.totalToday,
-        error: false,
+        error: "",
       };
     }
     default: return state;

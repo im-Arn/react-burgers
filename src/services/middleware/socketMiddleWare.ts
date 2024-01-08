@@ -1,9 +1,20 @@
 import { getCookie } from "../../components/utils/cookies";
 import { updateUserToken } from "../actions/user";
+import { Middleware, MiddlewareAPI } from "redux";
+import { AppDispatch, RootState } from "../types/types";
 
-export const socketMiddleware = (wsUrl, wsActions) => {
-  return (store) => {
-    let socket = null;
+type TWsActions = {
+  wsStart: "WS_CONNECTION_START" | "WS_CONNECTION_START_USER",
+  wsClose: "WS_CLOSE_CONNECTION" | "WS_CLOSE_CONNECTION_USER",
+  onOpen: "WS_CONNECTION_SUCCESS" | "WS_CONNECTION_SUCCESS_USER",
+  onClose: "WS_CONNECTION_CLOSED" | "WS_CONNECTION_CLOSED_USER",
+  onError: "WS_CONNECTION_ERROR" | "WS_CONNECTION_ERROR_USER",
+  onMessage: "WS_GET_MESSAGE" | "WS_GET_MESSAGE_USER"
+}
+
+export const socketMiddleware = (wsUrl: string, wsActions: TWsActions): Middleware => {
+  return (store: MiddlewareAPI<AppDispatch, RootState>) => {
+    let socket: WebSocket | null = null;
     const accessToken = getCookie('accessToken');
     const refreshToken = getCookie('refreshToken');
     return (next) => (action) => {
@@ -40,7 +51,7 @@ export const socketMiddleware = (wsUrl, wsActions) => {
           if (!accessToken && refreshToken) {
             dispatch(updateUserToken(refreshToken));
           }
-          if (['Invalid or missing token', 'Invalid token'].includes(parsedData.message)) {
+          if (['Invalid or missing token', 'Token is invalid'].includes(parsedData.message)) {
             dispatch(updateUserToken(refreshToken));
           }
 
