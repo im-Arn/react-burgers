@@ -15,5 +15,5 @@ export const rootReducer = combineReducers({
   order,
   user,
   wsOrders,
-  wsFeedUser
-}) 
+  wsFeedUser,
+});

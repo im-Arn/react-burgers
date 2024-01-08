@@ -5,27 +5,48 @@ import {
   FETCH_LOGIN_REQUEST,
   FETCH_LOGIN_SUCCESS,
   FETCH_LOGIN_FAILED,
+  // TLoginActions,
   FETCH_TOKEN_REQUEST,
   FETCH_TOKEN_SUCCESS,
   FETCH_TOKEN_FAILED,
+  // TTokenActions,
   FETCH_AUTH_USER_REQUEST,
   FETCH_AUTH_USER_SUCCESS,
   FETCH_AUTH_USER_FAILED,
+  // TUpdateCurrentUserActions,
   FETCH_LOGOUT_REQUEST,
   FETCH_LOGOUT_SUCCESS,
   FETCH_LOGOUT_FAILED,
+  // TLogOutActions,
   FETCH_PASSWORD_RECOVER_REQUEST,
   FETCH_PASSWORD_RECOVER_SUCCESS,
   FETCH_PASSWORD_RECOVER_FAILED,
+  // TPasswordRecoverActions,
   FETCH_PASSWORD_RESET_REQUEST,
   FETCH_PASSWORD_RESET_SUCCESS,
   FETCH_PASSWORD_RESET_FAILED,
+  // TPasswordResetActions,
   FETCH_EDIT_USER_REQUEST,
   FETCH_EDIT_USER_SUCCESS,
   FETCH_EDIT_USER_FAILED,
+  // TEditUserActions,
+  TUserActions,
 } from "../actions/user";
 
-const initialState = {
+type TUserStore = {
+  loading: boolean,
+  success: boolean,
+  email: string,
+  name: string,
+  accessToken: string,
+  refreshToken: string,
+  error: string,
+  isPassRecover: boolean,
+  isAuthChecked: boolean,
+  isPassReset: boolean,
+}
+
+const initialState: TUserStore = {
   loading: false,
   success: false,
   email: "",
@@ -38,7 +59,7 @@ const initialState = {
   isPassReset: false,
 };
 
-export const user = (state = initialState, action) => {
+export const user = (state = initialState, action: TUserActions): TUserStore => {
   switch (action.type) {
     case FETCH_REGISTER_REQUEST: {
       return {
@@ -146,6 +167,8 @@ export const user = (state = initialState, action) => {
         success: action.success,
         email: "",
         name: "",
+        accessToken: "Bearer ...",
+        refreshToken: "",
       }
     }
     case FETCH_LOGOUT_FAILED: {
@@ -166,7 +189,7 @@ export const user = (state = initialState, action) => {
         ...state,
         loading: false,
         success: action.success,
-        isPassRecover: action.success,
+        isPassRecover: action.isPassRecover,
       };
     }
     case FETCH_PASSWORD_RECOVER_FAILED: {

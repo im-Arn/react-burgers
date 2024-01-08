@@ -2,14 +2,19 @@ import {
   FETCH_ORDER_REQUEST,
   FETCH_ORDER_SUCCESS,
   FETCH_ORDER_FAILURE,
-  RESET_ORDER_NUMBER
+  RESET_ORDER_NUMBER,
+  TOrderActions,
 } from '../actions/order';
 
-const initialState = {
+type TNumberOrderState = {
+  number: number | null,
+}
+
+const initialState: TNumberOrderState = {
   number: null,
 };
 
-export const order = (state = initialState, action) => {
+export const order = (state = initialState, action: TOrderActions): TNumberOrderState => {
   switch (action.type) {
     case FETCH_ORDER_REQUEST: {
       return initialState;
