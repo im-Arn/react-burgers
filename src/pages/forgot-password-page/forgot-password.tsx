@@ -3,32 +3,26 @@ import {
   EmailInput,
   Button
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from "react";
-import {
-  useDispatch, 
-  useSelector
-} from "react-redux";
+import { useState, FormEvent } from "react";
 import {
   Link,
   Navigate
 } from 'react-router-dom';
-import { getSuccessUserData } from '../../components/utils/utils'; //именованная функция работы с хранилищем
 import { passwordRecover } from "../../services/actions/user"; //action 
+import { useAppDispatch, useAppSelector } from "../../services/types/types"; //кастомный диспатч
 
 export default function PasswordForgotPage() {
-  //хук хранения данных формы
-  const [email, setEmail] = useState("");
+  const dispatch = useAppDispatch();
+  const [email, setEmail] = useState<string>("");   //хук хранения данных формы
+  const success = useAppSelector(store => store.user.success);  //константа хранящая информацию о успешности запроса на смену пароля
+  
   //слушатель событий полей ввода
-  const onChange = e => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  //константа хранящая информацию о успешности запроса на смену пароля
-  const success = useSelector(getSuccessUserData);
-
-  const dispatch = useDispatch();
   //сабмит, отправка собранных из полей данных на сервер
-  const handlerSubmit = (e) => {
+  const handlerSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch(passwordRecover(email));
   };
@@ -43,7 +37,7 @@ export default function PasswordForgotPage() {
       <form className={Style.form} onSubmit={handlerSubmit}>
         <EmailInput
           placeholder={'Укажите e-mail'}
-          type="email"
+          name="email"
           required
           value={email}
           onChange={onChange}

@@ -4,31 +4,29 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import Style from './login-page.module.css';
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, FormEvent } from "react";
 import {
   Link,
 } from "react-router-dom";
 import { loginUser } from '../../services/actions/user'; //action регистрации пользователя
+import { useAppDispatch } from "../../services/types/types";
 
 export default function LoginPage() {
   //хуки хранения данных формы
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   //слушатели событий полей ввода
-  const onChangeEmail = e => {
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
-  const onChangePassword = e => {
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  //константа хранящая информацию о успешности регистрации
-  // const loginSuccess = useSelector(getUserDataName);
-
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   //сабмит, отправка собранных из полей данных на сервер
-  const handlerSubmit = (e) => {
+
+  const handlerSubmit = (e: FormEvent) => {
     e.preventDefault();
     const user = {
       "email": email,
@@ -48,7 +46,6 @@ export default function LoginPage() {
           value={email}
           onChange={onChangeEmail}
         />
-        {/* в документации указан пропс type, а нужен name */}
         <PasswordInput
           placeholder={'Пароль'}
           name="password"

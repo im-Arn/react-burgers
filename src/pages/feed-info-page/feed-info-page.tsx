@@ -1,25 +1,25 @@
-import { useDispatch, useSelector } from "react-redux";
+
 import Style from "./feed-info-page.module.css";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, Location } from "react-router-dom";
 import { useEffect, } from "react";
 import { getCookie } from '../../components/utils/cookies';
-import { getWsOrdersPageData, getWsOrdersUserData } from '../../components/utils/utils';
 import { WS_CLOSE_CONNECTION, WS_CONNECTION_START } from "../../services/actions/wsFeed";
 import { WS_CONNECTION_START_USER, WS_CONNECTION_CLOSED_USER } from "../../services/actions/wsUser";
 import FeedInfo from "../../components/feed-info/feed-info";
+import { useAppDispatch, useAppSelector } from "../../services/types/types";
 
 
 export default function FeedInfoPage() {
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const location: Location = useLocation();
+  const dispatch = useAppDispatch();
 
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
-  const orders = useSelector(getWsOrdersPageData);
-  const userOrders = useSelector(getWsOrdersUserData)
+  const orders = useAppSelector(store => store.wsOrders.orders);
+  const userOrders = useAppSelector(store => store.wsFeedUser.orders);
+
   const ordersData = location.pathname.includes('feed') ? orders : userOrders;
   const order = ordersData.find(order => order._id === id);
-  // const order = orders.find(order => order._id === id);
 
   useEffect(() => {
     if (location.pathname.includes('/feed')) {

@@ -1,15 +1,15 @@
 import Style from './main-page.module.css';
 import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../components/burger-constructor/burger-constructor";
-import { useDispatch, useSelector } from "react-redux";
 import { addConstructorBun, addConstructorIngredient } from "../../services/actions/constructor";
 import { v4 as uuidv4 } from 'uuid';
+import { useAppSelector, useAppDispatch, TIngredientItemConstructor } from "../../services/types/types";
 
 export default function MainPage() {
-  const dataStatus = useSelector(state => state.ingredients.isloading);
-  const dispatch = useDispatch();
+  const dataStatus = useAppSelector(state => state.ingredients.isloading);
+  const dispatch = useAppDispatch();
   //днд функция отвечающая за добавление данных в стор
-  const handleDrop = (item) => {
+  const onDropHandler = (item: TIngredientItemConstructor) => {
     item.type === "bun" ?
       dispatch(addConstructorBun(item)) :
       dispatch(addConstructorIngredient(item, uuidv4()));
@@ -20,7 +20,7 @@ export default function MainPage() {
   return (
     <main className={Style.main}>
       <BurgerIngredients />
-      <BurgerConstructor onDropHandler={handleDrop} />
+      <BurgerConstructor onDropHandler={onDropHandler} />
     </main>
   )
 }

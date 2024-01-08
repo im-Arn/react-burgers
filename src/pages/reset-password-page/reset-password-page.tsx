@@ -4,37 +4,34 @@ import {
   Input,
   Button
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
-import {
-  useDispatch,
-  useSelector
-} from "react-redux";
+import { useState, FormEvent } from 'react';
 import {
   Link,
   Navigate
 } from 'react-router-dom';
-import { getSuccessResetPassword, getSuccessPassRecover } from '../../components/utils/utils'; //именованная функция работы с хранилищем
+// import { getSuccessResetPassword, getSuccessPassRecover } from '../../components/utils/utils'; //именованная функция работы с хранилищем
 import { passwordReset } from "../../services/actions/user"; //action 
+import { useAppDispatch, useAppSelector } from '../../services/types/types';
 
 export default function PasswordResetPage() {
+  const dispatch = useAppDispatch();
   //хуки хранения данных формы
-  const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
+  const [password, setPassword] = useState<string>("");
+  const [code, setCode] = useState<string>("");
   //слушатель событий полей ввода
-  const onChangePassword = e => {
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
-  const onChangeCode = e => {
+  const onChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
   };
 
   //константа хранящая информацию о успешности смены пароля
-  const successReset = useSelector(getSuccessResetPassword);
-  const successRecover = useSelector(getSuccessPassRecover);
+  const successReset = useAppSelector(store => store.user.isPassReset);
+  const successRecover = useAppSelector(store => store.user.isPassRecover);
 
-  const dispatch = useDispatch();
   //сабмит, отправка собранных из полей данных на сервер
-  const handlerSubmit = (e) => {
+  const handlerSubmit = (e: FormEvent) => {
     e.preventDefault();
     dispatch(passwordReset(password, code));
   };
@@ -45,7 +42,7 @@ export default function PasswordResetPage() {
 
   return (
     <main className={Style.reset} >
-      { !successRecover && <Navigate to="/forgot-password" />}
+      {!successRecover && <Navigate to="/forgot-password" />}
       <h2 className={`text text_type_main-medium mb-6`}>Восстановление пароля</h2>
       <form className={Style.form} onSubmit={handlerSubmit}>
         <PasswordInput

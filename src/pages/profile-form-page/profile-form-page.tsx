@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, FormEvent } from "react";
 import Style from './profile-form-page.module.css';
 import {
   Button,
@@ -8,26 +7,26 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { editUser } from '../../services/actions/user';
-import { getUserData } from '../../components/utils/utils';
+import { useAppDispatch, useAppSelector } from "../../services/types/types";
 
 export default function ProfileFormPage() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   //хуки хранения данных формы
-  const user = useSelector(getUserData);
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [password, setPassword] = useState("");
+  const user = useAppSelector(store => store.user);
+  const [name, setName] = useState<string>(user.name);
+  const [email, setEmail] = useState<string>(user.email);
+  const [password, setPassword] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
   //слушатели событий полей ввода
-  const onChangeName = e => {
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     setIsEditing(true);
   };
-  const onChangeEmail = e => {
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setIsEditing(true);
   };
-  const onChangePassword = e => {
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     setIsEditing(true);
   };
@@ -41,7 +40,7 @@ export default function ProfileFormPage() {
   }, [user]);
 
   //сабмит, отправка собранных из полей данных на сервер
-  const handlerSubmit = (e) => {
+  const handlerSubmit = (e: FormEvent) => {
     e.preventDefault();
     const editedUser = {
       "email": email,
@@ -52,7 +51,7 @@ export default function ProfileFormPage() {
     setPassword("");
     setIsEditing(false);
   };
-  const handlerReset = (e) => {
+  const handlerReset = (e: FormEvent) => {
     e.preventDefault();
     setName(user.name);
     setEmail(user.email);
@@ -64,26 +63,26 @@ export default function ProfileFormPage() {
     <form className={Style.inputs} onReset={handlerReset} onSubmit={handlerSubmit}>
       <Input
         placeholder={'Имя'}
-        name="text"
+        name={"text"}
         required
         value={name}
         onChange={onChangeName}
         minLength={3}
-        icon="EditIcon"
+        icon={"EditIcon"}
       />
       <EmailInput
         placeholder={'Логин'}
-        type="email"
+        name="email"
         required
         value={email}
         onChange={onChangeEmail}
         minLength={3}
-        icon="EditIcon"
+        isIcon={true} //потому что документация
       />
       <PasswordInput
         placeholder={'Пароль'}
         icon={"EditIcon"}
-        type="password"
+        name={"password"}
         required
         value={password}
         onChange={onChangePassword}

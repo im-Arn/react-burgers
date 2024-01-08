@@ -1,24 +1,20 @@
 import Style from "./profile-orders-page.module.css";
 import IngredientsBar from '../../components/ingredients-bar/ingredients-bar';
-import { useSelector } from "react-redux";
 import { getCookie } from '../../components/utils/cookies';
 import {
-  getAllIngredientsData,
-  getWsOrdersUserData,
-  getUserDataName,
   setDate,
   sumPrice,
 } from '../../components/utils/utils';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Location, NavigateFunction } from "react-router-dom";
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { WS_CLOSE_CONNECTION_USER, WS_CONNECTION_START_USER } from "../../services/actions/wsUser";
+import { useAppDispatch, useAppSelector } from "../../services/types/types";
 
 
 export default function ProfileOrdersPage() {
-  const dispatch = useDispatch();
-  const userData = useSelector(getUserDataName);
+  const dispatch = useAppDispatch();
+  const userData = useAppSelector(store => store.user.name);
 
   useEffect(() => {
     dispatch({
@@ -31,13 +27,13 @@ export default function ProfileOrdersPage() {
         payload: getCookie("accessToken")
       })
     };
-  }, [userData]);
+  }, [userData]);// eslint-disable-line
 
-  const allIngredients = useSelector(getAllIngredientsData); // все ингредиенты
-  const userOrders = useSelector(getWsOrdersUserData); //получить список заказов с хранилища вебсокета
+  const allIngredients = useAppSelector(state => state.ingredients.ingredients); // все ингредиенты
+  const userOrders = useAppSelector(store => store.wsFeedUser.orders); //получить список заказов с хранилища вебсокета
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location: Location = useLocation();
+  const navigate: NavigateFunction = useNavigate();
 
   return (
     <article className={Style.feedList}>
@@ -54,7 +50,7 @@ export default function ProfileOrdersPage() {
               <div className={`${Style.infoOrder} mb-6`}>
                 <p className="text text_type_digits-default">#{order.number}</p>
                 <p className="text text_type_main-default text_color_inactive">
-                {time}{setDate(order.createdAt)}
+                  {time}{setDate(order.createdAt)}
                 </p>
               </div>
               <h2 className="text text_type_main-medium mb-2">{order.name}</h2>

@@ -1,6 +1,5 @@
 import Style from './registration-page.module.css';
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import {
   Button,
@@ -9,30 +8,30 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { registerUser } from "../../services/actions/user"; //action регистрации пользователя
-import { getSuccessUserAuth } from '../../components/utils/utils'; //именованная функция работы с хранилищем
+import { useAppDispatch, useAppSelector } from "../../services/types/types";
 
 export default function RegistrationPage() {
   //хуки хранения данных формы
-  const [login, setLogin] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [login, setLogin] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   //слушатели событий полей ввода
-  const onChangeLogin = e => {
+  const onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogin(e.target.value);
   };
-  const onChangeEmail = e => {
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
-  const onChangePassword = e => {
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
   //константа хранящая информацию о успешности регистрации
-  const registerSuccess = useSelector(getSuccessUserAuth);
+  const registerSuccess = useAppSelector(store => store.user.name);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   //сабмит, отправка собранных из полей данных на сервер
-  const handlerSubmit = (e) => {
+  const handlerSubmit = (e: FormEvent) => {
     e.preventDefault();
     const user = {
       email: email,
@@ -58,14 +57,14 @@ export default function RegistrationPage() {
           onChange={onChangeLogin}
         />
         <EmailInput
-          type="email"
+          name="email"
           placeholder="E-mail"
           value={email}
           required
           onChange={onChangeEmail}
         />
         <PasswordInput
-          type="password"
+          name="password"
           placeholder="Пароль"
           icon="ShowIcon"
           value={password}

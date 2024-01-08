@@ -1,25 +1,24 @@
-
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from "../../services/types/types";
 import Style from './profile-page.module.css';
 import { NavLink, Outlet } from 'react-router-dom';
 import { logOut } from '../../services/actions/user';
 import { getCookie } from '../../components/utils/cookies';
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, Location, NavigateFunction } from "react-router-dom";
 import Modal from "../../components/modal/modal";
 import FeedInfo from "../../components/feed-info/feed-info";
 import FeedInfoPage from "../feed-info-page/feed-info-page";
 
 export default function ProfilePage() {
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate: NavigateFunction = useNavigate();
+  const dispatch = useAppDispatch();
   const handlerLogout = () => {
     const refreshToken = getCookie('refreshToken');
     dispatch(logOut(refreshToken));
   }
   const params = useParams();
-  const location = useLocation();
-  const background = location.state?.modal;
+  const location: Location = useLocation();
+  const background: boolean = location.state?.modal;
 
   
   // реализуем возможность сбежать

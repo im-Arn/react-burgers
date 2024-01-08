@@ -1,18 +1,14 @@
 import Style from "./feed-page.module.css";
 import { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { WS_CLOSE_CONNECTION, WS_CONNECTION_START } from "../../services/actions/wsFeed";
 import OrderStatus from '../../components/order-status/order-status';
 import OrdersTotal from '../../components/orders-totals/orders-total';
 import OrdersList from '../../components/orders-list/orders-list';
-import {
-  getWsOrdersPageData,
-  getWsOrdersPageTotal,
-  getWsOrdersPageTotalToday
-} from '../../components/utils/utils';
+import { useAppDispatch, useAppSelector } from "../../services/types/types";
+
 
 export default function FeedPage() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch({
       type: WS_CONNECTION_START //подсоединяемся к вебсокету
@@ -22,11 +18,11 @@ export default function FeedPage() {
         type: WS_CLOSE_CONNECTION
       })
     }
-  }, []);
+  }, []); // eslint-disable-line
 
-  const orders = useSelector(getWsOrdersPageData); //получить список заказов с хранилища вебсокета
-  const total = useSelector(getWsOrdersPageTotal); //получить число всех заказов с хранилища вебсокета
-  const totalToday = useSelector(getWsOrdersPageTotalToday); //получить число заказов за сегодня с хранилища вебсокета
+  const orders = useAppSelector(store => store.wsOrders.orders); //получить список заказов с хранилища вебсокета
+  const total = useAppSelector(store => store.wsOrders.total); //получить число всех заказов с хранилища вебсокета
+  const totalToday = useAppSelector(store => store.wsOrders.totalToday); //получить число заказов за сегодня с хранилища вебсокета
 
   const ordersDone = useMemo(() =>
     orders.filter((item) => item.status === 'done'),
