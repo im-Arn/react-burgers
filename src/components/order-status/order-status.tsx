@@ -1,7 +1,12 @@
 import Style from './order-status.module.css';
-import PropTypes from 'prop-types';
+import { TOrderData} from '../../services/types/types';
 
-export default function OrderStatus(props) {
+type TOrderStatusProp = {
+  title: string,
+  orders: TOrderData[],
+  done: boolean,
+}
+export default function OrderStatus(props: TOrderStatusProp) {
   const ordersProps = props;
 
   return (
@@ -18,11 +23,4 @@ export default function OrderStatus(props) {
       </ul>
     </li>
   )
-};
-
-OrderStatus.propTypes = {
-  title: PropTypes.string.isRequired,
-  orders: PropTypes.arrayOf(
-    PropTypes.shape({number: PropTypes.number.isRequired})).isRequired,
-  done: PropTypes.bool.isRequired,
 };

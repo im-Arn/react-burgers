@@ -1,28 +1,27 @@
 import Style from './burger-constructor.module.css';
-import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { CurrencyIcon, Button, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { useDispatch, useSelector } from "react-redux";
 import { fetchOrder, resetOrderNumber } from '../../services/actions/order';
 import { DraggableElement } from '../draggable-element/draggable-element';
 import { useDrop } from "react-dnd";
-import { getOrderNumber, getOrderData } from '../../components/utils/utils';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { getSuccessUserAuth, getSuccessUserData } from "../utils/utils";
+import { useLocation, useNavigate, Location, NavigateFunction } from 'react-router-dom';
 
+import { TIngredientItem, useAppDispatch, useAppSelector, TIngredientItemConstructor} from "../../services/types/types";
+import { TConstructorState } from "../../services/reducers/constructor";
+import { clearConstructorIngredients } from "../../services/actions/constructor";
 
-export default function BurgerConstructor({ onDropHandler }) {
-  const orderNumber = useSelector(getOrderNumber); //достали номер заказа из стора
-  const orderList = useSelector(getOrderData); //достали список ингредиентов лежащих в заказе из стора
-  const isAuthenticated = useSelector(getSuccessUserData); //достали сведения об аутентификации //был getSuccessUserAuth, показалось что багует. хотя это может из-за пинга.
+export default function BurgerConstructor({ onDropHandler }: { onDropHandler: (item: TIngredientItemConstructor) => void }) {
+  const orderNumber = useAppSelector(state => state.order.number); //достали номер заказа из стора
+  const orderList: TConstructorState = useAppSelector(state => state.constructorData); //достали список ингредиентов лежащих в заказе из стора
+  const isAuthenticated = useAppSelector(store => store.user.success); //достали сведения об аутентификации //был getSuccessUserAuth, показалось что багует. хотя это может из-за пинга.
 
-  const location = useLocation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [totalPrice, setTotalPrice] = useState(0); //хук подсчёта финальной стоимости
-  const [totalIngredientsId, setTotalIngredientsId] = useState(null); //хук сборки id для отправки на сервер
+  const location: Location = useLocation();
+  const navigate: NavigateFunction = useNavigate();
+  const dispatch = useAppDispatch();
+  const [totalPrice, setTotalPrice] = useState<number>(0); //хук подсчёта финальной стоимости
+  const [totalIngredientsId, setTotalIngredientsId] = useState<string[] | null>(null); //хук сборки id для отправки на сервер
 
   //работа с модальным окном и отправка [id] на сервер, получение номера заказа-----------------------
   const openModal = () => {
@@ -37,13 +36,14 @@ export default function BurgerConstructor({ onDropHandler }) {
   }
   const closeModal = () => {
     dispatch(resetOrderNumber(null));
+    dispatch(clearConstructorIngredients());
   }
 
 
   //dnd функционал -----------------------------------------------------------------------------------
   const [{ isHover }, dropTargetRef] = useDrop({
     accept: "ingredient", //аналогично type у useDrag. 
-    drop(itemId) {
+    drop(itemId: TIngredientItemConstructor) {
       onDropHandler(itemId);
     },
     collect: monitor => ({
@@ -51,21 +51,20 @@ export default function BurgerConstructor({ onDropHandler }) {
     })
   });
 
-  useEffect(() => {
-    // считаем сумму, пишем в стейт
-    const sum = orderList.toppings.reduce(
-      (current, total) => current + total.price,
+  useEffect(() => {  // считаем сумму, пишем в стейт
+    const sum: number = orderList.toppings.reduce(
+      (current: number, total: TIngredientItem) => current + total.price,
       orderList.bun === null || orderList.bun.price === undefined ? 0 : orderList.bun.price * 2
     );
     setTotalPrice(sum);
 
     // если ингредиентов достаточно, считаем айдишники, пишем в стейт
     if (orderList.bun && orderList.toppings.length > 0) {
-      const ingredientsId = [];
-      orderList.toppings.forEach((ingredient) => {
+      const ingredientsId: string[] = [];
+      orderList.toppings.forEach((ingredient: TIngredientItemConstructor) => {
         ingredientsId.push(ingredient._id)
       });
-      const totalIngredientsId = [orderList.bun._id, ...ingredientsId, orderList.bun._id];
+      const totalIngredientsId: string[] = [orderList.bun._id, ...ingredientsId, orderList.bun._id];
       setTotalIngredientsId(totalIngredientsId);
     }
   }, [orderList]);
@@ -86,7 +85,7 @@ export default function BurgerConstructor({ onDropHandler }) {
         </li>) : null}
         <li className={Style.listitemlist} key={2}>
           <ul className={Style.list2}>
-            {orderList.toppings && (orderList.toppings.map(function (ingredient, index) {
+            {orderList.toppings && (orderList.toppings.map(function (ingredient: TIngredientItemConstructor, index: number) {
               return (
                 <DraggableElement ingredient={ingredient} index={index} key={ingredient.uid} />
               )
@@ -105,7 +104,7 @@ export default function BurgerConstructor({ onDropHandler }) {
       </ul>
       <div className={`${Style.pricearea} pr-4`}>
         <p className='text text_type_digits-medium mr-9'>{`${totalPrice}`}<CurrencyIcon type="primary" /></p>
-        <Button htmlType="button" type="primary" size="large" onClick={openModal} disabled={(orderList.bun && orderList.toppings.length > 0) ? false : "disabled"}>
+        <Button htmlType="button" type="primary" size="large" onClick={openModal} disabled={(orderList.bun && orderList.toppings.length > 0) ? false : true}>
           Оформить заказ
         </Button>
       </div>
@@ -117,8 +116,4 @@ export default function BurgerConstructor({ onDropHandler }) {
       )}
     </section >
   )
-}
-
-BurgerConstructor.propTypes = {
-  onDropHandler: PropTypes.func.isRequired
 }

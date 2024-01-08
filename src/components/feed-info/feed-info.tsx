@@ -1,28 +1,29 @@
-import { useSelector } from "react-redux";
 import Style from "./feed-info.module.css";
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useLocation, useParams } from "react-router-dom";
-import { getAllIngredientsData, getWsOrdersPageData, getWsOrdersUserData, setDate, sumPrice, countIngredients } from '../utils/utils';
+import { useLocation, useParams, Location } from "react-router-dom";
+import { setDate, sumPrice, countIngredients } from '../utils/utils';
+import { useAppSelector, TIngredientItem } from "../../services/types/types";
 
-//спасибо огромное за такое отличное подробное ревью. это была очень сложная работа для меня и много где остались некрасивые хвосты и повторы кода. 
-//приходилось закрывать на них глаза в угоду скорости сдачи. я обязательно доработаю код по вашим рекомендациям. 
-//и если есть что-то обучающее, что вы хотели бы дополнительно порекомендовать, буду очень рада) с приближающимся новым годом! :)
+type TIngredientsCounted = {
+  [key: string]: number;
+};
+
 export default function FeedInfo() {
 
-  const allIngredients = useSelector(getAllIngredientsData);
-  const { id } = useParams();
-  const location = useLocation();
+  const allIngredients = useAppSelector(store => store.ingredients.ingredients);
+  const { id } = useParams<{ id: string }>();
+  const location: Location = useLocation();
   const checkLocation = location.pathname.includes('feed');
-  const orders = useSelector(getWsOrdersPageData);
-  const ordersUser = useSelector(getWsOrdersUserData);
+  const orders = useAppSelector(store => store.wsOrders.orders);
+  const ordersUser = useAppSelector(store => store.wsFeedUser.orders);
   const currentOrders = checkLocation === true ? orders : ordersUser;
-  const order = currentOrders.find(order => order._id === id);
+  const order  = currentOrders.find(order => order._id === id);
 
   if (!order) return null
 
   const time = <FormattedDate date={new Date(order?.createdAt)} />;
   const status = order.status === 'done' ? 'Выполнен' : 'Готовится';
-  const ingredientsCounted = countIngredients(order.ingredients);
+  const ingredientsCounted = countIngredients(order.ingredients) as TIngredientsCounted;
   const ingredientsSorted = Object.keys(ingredientsCounted);
   const countSorted = Object.values(ingredientsCounted);
   const totalPrice = sumPrice(order.ingredients, allIngredients);
@@ -35,14 +36,14 @@ export default function FeedInfo() {
       <h2 className="text text_type_main-medium mb-5">Состав:</h2>
       <ul className={Style.list}>
         {ingredientsSorted.map((ing, i) => {
-          const price = allIngredients.find((el) => el._id === ing).price;
+          const price = allIngredients?.find((el: TIngredientItem) => el._id === ing)?.price;
           return (
             <li key={i} className={Style.ingredients}>
               <div className={Style.ingredientInfo}>
-                <img src={allIngredients.find((el) => el._id === ing).image_mobile}
-                  alt={allIngredients.find((el) => el._id === ing).name}
+                <img src={allIngredients?.find((el: TIngredientItem) => el._id === ing)?.image_mobile}
+                  alt={allIngredients?.find((el: TIngredientItem) => el._id === ing)?.name}
                   className={Style.image} />
-                <p className={`${Style.text} text text_type_main-default`}>{allIngredients.find((el) => el._id === ing).name}</p>
+                <p className={`${Style.text} text text_type_main-default`}>{allIngredients?.find((el: TIngredientItem) => el._id === ing)?.name}</p>
               </div>
               <div className={`${Style.priceIngredient}`}>
                 <p className="text text_type_digits-default">{`${countSorted[i]} x ${price}`}</p>

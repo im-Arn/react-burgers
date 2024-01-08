@@ -1,21 +1,17 @@
 import Style from './ingredient-details.module.css'
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllIngredientsData } from '../../components/utils/utils';
-
+import { useAppSelector, TIngredientItem } from "../../services/types/types";
 
 export default function IngredientDetails() {
-  // const ingredient = useSelector(getIngredientData); //получаем хранящийся сейчас в сторе ингредиент
+  const { id } = useParams<{ id: string }>();
+  const [ingredient, setElement] = useState<TIngredientItem>();
 
-  const { id } = useParams();
-  const [ingredient, setElement] = useState(null);
+  const ingredients = useAppSelector(state => state.ingredients.ingredients);
 
-  const ingredients = useSelector(getAllIngredientsData);
-
-  useEffect(()=>{
+  useEffect(() => {
     setElement(ingredients.find(ing => ing._id === id))
-  }, [ingredients]);
+  }, [id, ingredients]);
 
   return ingredient ? (
     <div className={Style.content}>

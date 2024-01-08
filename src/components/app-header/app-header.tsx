@@ -1,11 +1,11 @@
 import Style from './app-header.module.css';
 
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Location } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 
 function AppHeader() {
-  const location = useLocation();
+  const location: Location = useLocation();
 
   return (
     <header className={`${Style.header} mt-10`}>

@@ -15,21 +15,19 @@ import ProfileOrdersPage from '../../pages/profile-orders-page/profile-orders-pa
 import ProfileFormPage from '../../pages/profile-form-page/profile-form-page';
 import { updateCurrentUser } from '../../services/actions/user'; //actions
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from "../../services/actions/ingredients";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Location } from 'react-router-dom';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route/protected-route';
-import { getLoadingStatus, getDataLoadStatus } from '../utils/utils';
-
+import { useAppDispatch, useAppSelector } from "../../services/types/types";
 
 function App() {
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const background = location.state && location.state?.modal;
-  const dataLoading = useSelector(getLoadingStatus);
-  const dataStatus = useSelector(getDataLoadStatus);
+  const dispatch = useAppDispatch();
+  const location: Location = useLocation();
+  const background: boolean = location.state && location.state?.modal;
+  const dataLoading = useAppSelector(state => state.ingredients.isloading);
+  const dataStatus = useAppSelector(state => state.ingredients.isload);
 
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -45,7 +43,7 @@ function App() {
           <Routes location={location}>
             {!background && (<Route path="/ingredients/:id" element={<IngredientPage />} />)}
             {!background && (<Route path="/feed/:id" element={<FeedInfoPage />} />)}
-            <Route path="/" element={<MainPage />} location={background || location}>
+            <Route path="/" element={<MainPage />} >
               <Route path="ingredients/:id" element={<IngredientPage />} />
             </Route>
             <Route path="/login" element={<OnlyUnAuth component={<LoginPage />} />} />

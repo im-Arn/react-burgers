@@ -1,11 +1,9 @@
 import Style from './ingredients-bar.module.css';
-import { useSelector } from "react-redux";
-import PropTypes from 'prop-types';
-import { getAllIngredientsData } from '../utils/utils';
+import { useAppSelector } from "../../services/types/types";
 
-export default function IngredientsBar({ ingredientsProps }) {
-  const allIngredients = useSelector(getAllIngredientsData);
-  const ingredients = ingredientsProps;
+export default function IngredientsBar(props: { ingredientsProps: string[] }) {
+  const allIngredients = useAppSelector(state => state.ingredients.ingredients);
+  const ingredients = props.ingredientsProps;
 
   return (
     <ul className={Style.ingredientsBar} >
@@ -19,8 +17,8 @@ export default function IngredientsBar({ ingredientsProps }) {
                     <div className={`${Style.shadeBox}`}>
                       <p className={`text text_type_digits-default ${Style.counter}`}>+{ingredients.length - 5}</p>
                     </div>
-                    <img src={allIngredients.find((el) => el._id === ingredient).image_mobile}
-                      alt={allIngredients.find((el) => el._id === ingredient).name}
+                    <img src={allIngredients?.find((el) => el._id === ingredient)?.image_mobile}
+                      alt={allIngredients?.find((el) => el._id === ingredient)?.name}
                       className={Style.image} />
                   </li>
                 )
@@ -29,8 +27,8 @@ export default function IngredientsBar({ ingredientsProps }) {
             if (index >= 0 && index <= 5) {
               return (
                 <li key={index} style={{ zIndex: 10 - index }} className={Style.imgList}>
-                  <img src={allIngredients.find((el) => el._id === ingredient).image_mobile}
-                    alt={allIngredients.find((el) => el._id === ingredient).name}
+                  <img src={allIngredients.find((el) => el._id === ingredient)?.image_mobile}
+                    alt={allIngredients.find((el) => el._id === ingredient)?.name}
                     className={Style.image} />
                 </li>
               )
@@ -39,10 +37,7 @@ export default function IngredientsBar({ ingredientsProps }) {
         })
       }
     </ul>
+    
   );
-};
-
-IngredientsBar.propTypes = {
-  ingredientsProps: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

@@ -1,9 +1,8 @@
 import Style from './order-details.module.css'
-import { useSelector } from "react-redux";
-import { getOrderNumber } from '../../components/utils/utils';
+import { useAppSelector } from "../../services/types/types";
 
 export default function OrderDetails() {
-  const orderNumber = useSelector(getOrderNumber);
+  const orderNumber = useAppSelector(state => state.order.number);
   return ( 
     <div className={Style.content}>
       <p className={`text text_type_digits-large ${Style.number}`}>{orderNumber}</p>
