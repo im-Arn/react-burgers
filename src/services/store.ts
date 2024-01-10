@@ -40,7 +40,12 @@ const wsActionsUser = {
 
 const wsAll = 'wss://norma.nomoreparties.space/orders/all';
 const wsUser = 'wss://norma.nomoreparties.space/orders';
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, socketMiddleware(wsAll, wsActions), socketMiddleware(wsUser, wsActionsUser))));
+const store = createStore(
+  rootReducer,
+  composeWithDevTools
+    (applyMiddleware(thunk,
+      socketMiddleware(wsAll, wsActions),
+      socketMiddleware(wsUser, wsActionsUser))));
 
 export default store;
 
