@@ -1,20 +1,20 @@
-import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { Action } from "redux";
-import { useDispatch } from "react-redux";
-import { ThunkAction } from "redux-thunk";
-import store from "../store";
+import { AnyAction } from "redux";
 import {
-  // TUpdateCurrentUserActions,
-  // TEditUserActions,
-  // TLoginActions,
-  // TTokenActions,
-  TUserActions,
-} from "../actions/user";
+  TypedUseSelectorHook,
+  useDispatch as dispatchHook,
+  useSelector as selectorHook,
+} from "react-redux";
+
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+// import store from "../store";
+import { TUserActions } from "../actions/user";
 import { TWebSocketActions } from "../actions/wsFeed";
 import { TWebSocketUserActions } from "../actions/wsUser";
 import { TOrderActions } from "../actions/order";
 import { TConstructorActions } from "../actions/constructor";
 import { TIngredientDetailsActions } from "../actions/ingredientDetails";
+import { TIngredientsAct } from "../actions/ingredients";
+import { rootReducer } from "../reducers/rootReducer";
 
 export type TIngredientItem = {
   _id: string,
@@ -41,15 +41,15 @@ export type TOrderData = {
   _id: string,
 };
 
-export type TRegisterUser = { 
-  email: string, 
-  password: string, 
+export type TRegisterUser = {
+  email: string,
+  password: string,
   name: string,
 };
 
-export type TLoginUser = { 
-  email: string, 
-  password: string, 
+export type TLoginUser = {
+  email: string,
+  password: string,
 };
 
 export type TIngredientItemConstructor = {
@@ -71,17 +71,22 @@ export type TIngredientItemConstructor = {
   uid: string;
 };
 
-export type RootState = ReturnType<typeof store.getState>;
-export type TApplicationActions = TConstructorActions | TOrderActions | TUserActions | TWebSocketActions 
-| TWebSocketUserActions | TIngredientDetailsActions;
+export type RootState = ReturnType<typeof rootReducer>
+// export type RootState = ReturnType<typeof store.getState>;
+export type TApplicationActions = TConstructorActions | TOrderActions | TUserActions | TWebSocketActions
+  | TWebSocketUserActions | TIngredientDetailsActions | TIngredientsAct;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType, //return type
   RootState,
-  Action,
+  AnyAction,
   TApplicationActions
 >;
 
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch = () => useDispatch<AppDispatch>();
+export type AppDispatch = ThunkDispatch<RootState, AnyAction, TApplicationActions>;
 
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch: () => AppDispatch = dispatchHook;
+export const useAppSelector: TypedUseSelectorHook<RootState> = selectorHook;
+
+// export type AppDispatch = typeof store.dispatch;
+// export const useAppDispatch = () => dispatchHook<AppDispatch>();
+// export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

@@ -1,19 +1,35 @@
 import { getCookie } from "../../components/utils/cookies";
 import { updateUserToken } from "../actions/user";
-import { Middleware, MiddlewareAPI } from "redux";
-import { AppDispatch, RootState } from "../types/types";
+import { Middleware, MiddlewareAPI, Dispatch } from "redux";
+import { AppDispatch } from "../types/types";
+import {
+  WS_CONNECTION_START,
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_ERROR,
+  WS_CONNECTION_CLOSED,
+  WS_GET_MESSAGE,
+  WS_CLOSE_CONNECTION
+} from "../actions/wsFeed";
+import {
+  WS_CLOSE_CONNECTION_USER,
+  WS_CONNECTION_CLOSED_USER,
+  WS_CONNECTION_ERROR_USER,
+  WS_CONNECTION_START_USER,
+  WS_CONNECTION_SUCCESS_USER,
+  WS_GET_MESSAGE_USER
+} from "../actions/wsUser";
 
 type TWsActions = {
-  wsStart: "WS_CONNECTION_START" | "WS_CONNECTION_START_USER",
-  wsClose: "WS_CLOSE_CONNECTION" | "WS_CLOSE_CONNECTION_USER",
-  onOpen: "WS_CONNECTION_SUCCESS" | "WS_CONNECTION_SUCCESS_USER",
-  onClose: "WS_CONNECTION_CLOSED" | "WS_CONNECTION_CLOSED_USER",
-  onError: "WS_CONNECTION_ERROR" | "WS_CONNECTION_ERROR_USER",
-  onMessage: "WS_GET_MESSAGE" | "WS_GET_MESSAGE_USER"
+  wsStart: typeof WS_CONNECTION_START | typeof WS_CONNECTION_START_USER,
+  wsClose: typeof WS_CLOSE_CONNECTION | typeof WS_CLOSE_CONNECTION_USER,
+  onOpen: typeof WS_CONNECTION_SUCCESS | typeof WS_CONNECTION_SUCCESS_USER,
+  onClose: typeof WS_CONNECTION_CLOSED | typeof WS_CONNECTION_CLOSED_USER,
+  onError: typeof WS_CONNECTION_ERROR | typeof WS_CONNECTION_ERROR_USER,
+  onMessage: typeof WS_GET_MESSAGE | typeof WS_GET_MESSAGE_USER
 }
 
 export const socketMiddleware = (wsUrl: string, wsActions: TWsActions): Middleware => {
-  return (store: MiddlewareAPI<AppDispatch, RootState>) => {
+  return (store: MiddlewareAPI<Dispatch<any>, AppDispatch>) => {
     let socket: WebSocket | null = null;
     const accessToken = getCookie('accessToken');
     const refreshToken = getCookie('refreshToken');

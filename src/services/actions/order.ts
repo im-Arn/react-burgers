@@ -2,7 +2,6 @@ import { getCookie } from "../../components/utils/cookies";
 import { AppThunk, TOrderData } from "../types/types";
 import { fetchWithRefresh, } from "./user";
 import { SERVER_URL } from "../../components/utils/serverUrl";
-import { Dispatch } from "redux";
 
 export const FETCH_ORDER_REQUEST: "FETCH_ORDER_REQUEST" = "FETCH_ORDER_REQUEST";
 export const FETCH_ORDER_SUCCESS: "FETCH_ORDER_SUCCESS" = "FETCH_ORDER_SUCCESS";
@@ -65,7 +64,7 @@ export function resetOrderNumber(dataNumber: null): TOrderResetNumber {
 
 /** action получения номера заказа с сервера */
 export function fetchOrder(ingredients: string[] | null): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+  return async function (dispatch) {
     return fetchWithRefresh(dispatch, `${SERVER_URL}orders`,
       {
         method: 'POST',

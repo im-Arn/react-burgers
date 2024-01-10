@@ -1,5 +1,4 @@
 import { api } from "../../components/utils/Api";
-import { Dispatch } from 'redux';
 import { setCookie, getCookie } from "../../components/utils/cookies";
 import { SERVER_URL } from "../../components/utils/serverUrl";
 import { AppThunk, AppDispatch, TRegisterUser, TLoginUser } from "../types/types";
@@ -57,7 +56,7 @@ type TServerResRefToken = {
   success: boolean,
   accessToken: string,
   refreshToken: string
-} 
+}
 
 
 /** TYPES обновления регистрации пользователя ------------ */
@@ -362,8 +361,8 @@ export type TUserActions = TLoginActions | TUpdateCurrentUserActions | TEditUser
 // ======= ACTIONS ========================================================================================
 
 /** action регистрации пользователя */
-export function registerUser(user: TRegisterUser): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+export function registerUser(user: TRegisterUser): AppThunk {
+  return async function (dispatch) {
     dispatch(fetchRegisterRequest());
     try {
       const response = await api.registerUser<TServerResRegisterLogin>(user);
@@ -383,8 +382,8 @@ export function registerUser(user: TRegisterUser): AppThunk<void> {
 };
 
 /** action логина пользователя */
-export function loginUser(user: TLoginUser): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+export function loginUser(user: TLoginUser): AppThunk {
+  return async function (dispatch) {
     dispatch(fetchLoginRequest());
     try {
       const response = await api.loginUser<TServerResRegisterLogin>(user);
@@ -408,8 +407,8 @@ export function loginUser(user: TLoginUser): AppThunk<void> {
 };
 
 /** action обновления токена пользователя */
-export function updateUserToken(token: string | undefined): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+export function updateUserToken(token: string | undefined): AppThunk {
+  return async function (dispatch) {
     dispatch(fetchTokenRequest());
     try {
       const response = await api.refreshToken<TServerResRefToken>(token);
@@ -418,8 +417,8 @@ export function updateUserToken(token: string | undefined): AppThunk<void> {
       dispatch(fetchTokenSuccess(response));
     } catch (error: any) {
       if (error instanceof Error && (error.message as string)) {
-      dispatch(fetchTokenFailed(error));
-      console.log('Ошибка, не получилось обновить токен', error);
+        dispatch(fetchTokenFailed(error));
+        console.log('Ошибка, не получилось обновить токен', error);
       } else {
         console.log('Неожиданная ошибка обновления токена error massage', error);
       }
@@ -428,17 +427,17 @@ export function updateUserToken(token: string | undefined): AppThunk<void> {
 };
 
 /** action LogOut пользователя */
-export function logOut(refreshToken: string | undefined): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+export function logOut(refreshToken: string | undefined): AppThunk {
+  return async function (dispatch) {
     dispatch(fetchLogOutRequest());
     try {
       const response = await api.logOut<TServerResResetPassLogout>(refreshToken);
       setCookie("accessToken", "");
       setCookie("refreshToken", "");
-      const acctoken = getCookie('accessToken');
-      const refftoken = getCookie('refreshToken');
-      console.log('очищение acctoken куки' + acctoken);
-      console.log('очищение refftoken куки' + refftoken);
+      // const acctoken = getCookie('accessToken');
+      // const refftoken = getCookie('refreshToken');
+      // console.log('очищение acctoken куки' + acctoken);
+      // console.log('очищение refftoken куки' + refftoken);
       dispatch(fetchLogOutSuccess(response));
       console.log('logOut', response.message); //убрать при сдаче
     } catch (error) {
@@ -453,8 +452,8 @@ export function logOut(refreshToken: string | undefined): AppThunk<void> {
 };
 
 /** action восстановления пароля */
-export function passwordRecover(email: string) {
-  return async function (dispatch: Dispatch) {
+export function passwordRecover(email: string): AppThunk {
+  return async function (dispatch) {
     dispatch(fetchPasswordRecoverRequest());
     try {
       const response = await api.recoverPassword<TServerResResetPassLogout>(email);
@@ -472,8 +471,8 @@ export function passwordRecover(email: string) {
 };
 
 // /** action сброса пароля */
-export function passwordReset(inputPassword: string, inputCode: string) {
-  return async function (dispatch: Dispatch) {
+export function passwordReset(inputPassword: string, inputCode: string): AppThunk {
+  return async function (dispatch) {
     dispatch(fetchPasswordResetRequest());
     try {
       const response = await api.resetPassword<TServerResResetPassLogout>(inputPassword, inputCode);
@@ -508,7 +507,7 @@ type TFetchOptions = TFetchOptionsBase & {
 };
 
 export const fetchWithRefresh = async (
-  dispatch: Dispatch<any> | AppDispatch,
+  dispatch: AppDispatch,
   // customDispatch: AppDispatch | AppThunk,
   // customDispatch: Dispatch<AppThunk | AppDispatch>,
   // customDispatch: Dispatch<any> | AppDispatch,
@@ -538,8 +537,8 @@ export const fetchWithRefresh = async (
 };
 
 // // ---- actions на fetchWithRefresh ----------------------------------------------------------------------
-export function editUser(user: { email: string, name: string, password: string, }): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+export function editUser(user: { email: string, name: string, password: string, }): AppThunk {
+  return async function (dispatch) {
     return fetchWithRefresh(dispatch, `${SERVER_URL}auth/user`,
       {
         method: 'PATCH',
@@ -559,8 +558,8 @@ export function editUser(user: { email: string, name: string, password: string, 
 }
 
 /**action обновления данных авторизованного пользователя */
-export function updateCurrentUser(): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+export function updateCurrentUser(): AppThunk {
+  return async function (dispatch) {
     return fetchWithRefresh(dispatch, `${SERVER_URL}auth/user`,
       {
         method: 'GET',

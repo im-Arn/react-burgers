@@ -2,6 +2,7 @@ import {
   FETCH_INGREDIENTS_REQUEST,
   FETCH_INGREDIENTS_SUCCESS,
   FETCH_INGREDIENTS_FAILURE,
+  TIngredientsAct,
 } from '../actions/ingredients'
 import { TIngredientItem } from "../types/types";
 
@@ -17,7 +18,7 @@ const initialState: TIngredientsDataState = {
   isload: false,
 };
 
-export const ingredients = (state = initialState, action: any): TIngredientsDataState => {
+export const ingredients = (state = initialState, action: TIngredientsAct): TIngredientsDataState => {
   switch (action.type) {
     //при начале загрузки статус загрузки становится положительным, данные ещё не получены и не записываются в стейт
     case FETCH_INGREDIENTS_REQUEST: {

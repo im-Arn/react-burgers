@@ -1,5 +1,5 @@
 import { api } from "../../components/utils/Api";
-import { Dispatch } from 'redux';
+// import { Dispatch } from 'redux';
 import { AppThunk, TIngredientItem } from "../types/types";
 
 export const FETCH_INGREDIENTS_REQUEST: "FETCH_INGREDIENTS_REQUEST" = "FETCH_INGREDIENTS_REQUEST";
@@ -23,6 +23,8 @@ export type TServerResIngredients = {
   data: TIngredientItem[];
 };
 
+export type TIngredientsAct = TIngredientsRequest | TIngredientsSuccess | TIngredientsFailure;
+
 /** action creator запроса данных с сервера */
 export function fetchIngredientsRequest(): TIngredientsRequest {
   return { type: FETCH_INGREDIENTS_REQUEST };
@@ -38,7 +40,7 @@ export function fetchIngredientsFailure(error: Error): TIngredientsFailure {
 
 /** action получения данных с сервера */
 export function fetchIngredients(): AppThunk<void> {
-  return async function (dispatch: Dispatch) {
+  return async function (dispatch) {
     dispatch(fetchIngredientsRequest());
     try {
       const response = await api.getIngredients<TServerResIngredients>();

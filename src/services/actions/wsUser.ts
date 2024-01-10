@@ -14,6 +14,7 @@ type TWsUserPayload = {
 
 export type TWsConnectionUserStart = {
   readonly type: typeof WS_CONNECTION_START_USER,
+  payload: string,
 }
 export type TWsConnectionUserSuccess = {
   readonly type: typeof WS_CONNECTION_SUCCESS_USER,
@@ -23,6 +24,7 @@ export type TWsConnectionUserError = {
 }
 export type TWsConnectionUserEClosed = {
   readonly type: typeof WS_CONNECTION_CLOSED_USER,
+  payload: string,
 }
 export type TWsGetMessageUser = {
   readonly type: typeof WS_GET_MESSAGE_USER,
@@ -30,6 +32,7 @@ export type TWsGetMessageUser = {
 }
 export type TWsUserCloseConnection = {
   readonly type: typeof WS_CLOSE_CONNECTION_USER,
+  payload: string,
 }
 
 export type TWebSocketUserActions = TWsConnectionUserStart | TWsConnectionUserSuccess | TWsConnectionUserError
