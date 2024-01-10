@@ -6,7 +6,7 @@ import { useAppSelector, TIngredientItem } from "../../services/types/types";
 export default function IngredientDetails() {
   const { id } = useParams<{ id: string }>();
   const [ingredient, setElement] = useState<TIngredientItem>();
-
+  
   const ingredients = useAppSelector(state => state.ingredients.ingredients);
 
   useEffect(() => {

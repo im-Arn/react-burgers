@@ -20,10 +20,10 @@ export default function IngredientItem(props: TProps) {
   const { id } = match?.params || {};
 
   //работа с модальным окном---------------------------------------------------------------------
-  const background: boolean = location.state?.modal;
   const dispatch = useAppDispatch();
   const ingredientData = props.data; //получаем ингредиент от родителя для рендера разметки
   const ingredientKey = props.kkey; //получаем ингредиент который попал в хранилище при клике по разметке
+  const background: boolean = location.state?.modal && id === ingredientData._id;
   const ingredientsStore = useAppSelector(state => state.constructorData); //получаем список ингредиентов в заказе, для счётчика
 
   const openModal = () => {
@@ -39,8 +39,8 @@ export default function IngredientItem(props: TProps) {
   const onClick = () => {
     if (id !== ingredientData._id) {
       navigate(`/ingredients/${ingredientData._id}`, { state: { modal: true, background: location } });
-    }
-    openModal();
+    } else {
+    openModal();}
   };
 
   //днд функционал---------------------------------------------------------------------------------
